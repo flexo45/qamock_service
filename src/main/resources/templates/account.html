@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Accounts page</title>
+</head>
+<body>
+    <h3 th:text="#{label.title}"></h3>
+    <p th:inline="text">Login as [[${#httpServletRequest.remoteUser}]]</p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+    <form method="post" action="add">
+        <input type="submit" value="ADD USER"/>
+    </form>
+    Accounts
+    <table>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.login}">login</td>
+            <td th:text="${user.email}">mail</td>
+        </tr>
+    </table>
+</body>
+</html>

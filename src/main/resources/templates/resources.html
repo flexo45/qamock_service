@@ -1,0 +1,29 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <div>
+        <button>create</button>
+    </div>
+    <table class="tbl">
+        <tr class="t_header">
+            <th>#</th>
+            <th th:text="#{resources.path}"></th>
+            <th th:text="#{resources.strategy}"></th>
+            <th th:text="#{resources.responses}"></th>
+        </tr>
+        <tr th:onclick="'openResource(' + ${res.id} + ')'" class="t_row" th:each="res : ${dynamic_resources}">
+            <th th:text="${res.id}"></th>
+            <th th:text="${res.path}"></th>
+            <th th:switch="${res.strategy}">
+                <span th:case="'0'" th:text="#{resources.strategy.sequence}"></span>
+                <span th:case="'1'" th:text="#{resources.strategy.random}"></span>
+                <span th:case="'2'" th:text="#{resources.strategy.script}"></span>
+                <span th:case="*">N/A</span>
+            </th>
+            <th>
+                <div th:each="rsp : ${res.responses}">
+                    <span th:text="${rsp}"></span>
+                </div>
+            </th>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,26 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <div>
+        <button>edit</button>
+        <button>delete</button>
+    </div>
+    <div>
+        <div class="r_ttl">
+            <span th:text="#{resource.title}"></span><span th:text="${id}"></span>:
+        </div>
+        <div class="r_dsc">
+            <div th:each="m : ${methods}">
+                <span th:text="${m.method}"></span>
+            </div>
+            <span th:text="#{resource.url}"></span><span th:text="${path}"></span>
+        </div>
+
+        <div th:text="${strategy}"></div>
+        <div th:each="resp : ${responses}">
+            <div th:text="${resp.id}"></div>
+            <div th:text="${resp.name}"></div>
+        </div>
+        <div th:text="${default_resp} != null ? ${default_resp.id} : 'NaN'"></div>
+        <div th:text="${last_resp} != null ? ${last_resp.id} : 'NaN'"></div>
+    </div>
+</div>
