@@ -1,5 +1,8 @@
 package org.qamock.service;
 
+import org.hibernate.HibernateException;
+import org.qamock.api.json.ResourceObject;
+import org.qamock.api.json.ResponseObject;
 import org.qamock.dao.DynamicResourceDao;
 import org.qamock.dao.DynamicResourceDaoImpl;
 import org.qamock.domain.*;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DynamicResourceServiceImpl implements DynamicResourcesService{
@@ -132,6 +136,118 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
         Content err_content = new Content("{\"code\":500,\"text\":\"INTERNAL SERVER ERROR\"}", err_response);
         resourceDao.addResponse(err_response);
         resourceDao.addContent(err_content);
+    }
+
+    @Transactional
+    @Override
+    public void createResource(ResourceObject resourceObject) {
+        logger.info("Receive create resource request: " + resourceObject);
+        DynamicResource resource = new DynamicResource(resourceObject.getPath(), resourceObject.getStrategy(), null, null);
+        resourceDao.addResource(resource);
+
+        if(resourceObject.getScript() != null){
+            Script script = new Script(resourceObject.getScript(), resource, null);
+            resourceDao.addScript(script);
+        }
+
+        for(String method : resourceObject.getMethods()){
+            DynamicResourceMethod resourceMethod = new DynamicResourceMethod(resource, method);
+            resourceDao.addResourceMethod(resourceMethod);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void createResponse(ResponseObject responseObject) {
+        logger.info("Receive create response request: " + responseObject);
+        DynamicResponse response = new DynamicResponse(responseObject.getName(), responseObject.getCode(), resourceDao.getResource(responseObject.getResource_id()));
+        resourceDao.addResponse(response);
+
+        if(responseObject.getContent() != null){
+            resourceDao.addContent(new Content(responseObject.getContent(), response));
+        }
+
+        if(responseObject.getScript() != null){
+            resourceDao.addScript(new Script(responseObject.getScript(), null, response));
+        }
+
+        for(Map.Entry<String, String> hdr : responseObject.getHeaders().entrySet()){
+            try {
+                resourceDao.addHeader(new Header(hdr.getKey(), hdr.getValue(), response));
+            }
+            catch (HibernateException e){
+                logger.info("Header already exist: " + hdr + ". Ignore");
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public void updateResource(ResourceObject resourceObject) {
+        logger.info("Receive update resource request: " + resourceObject);
+        DynamicResource resource = resourceDao.getResource(resourceObject.getId());
+        resource.setPath(resourceObject.getPath());
+        resource.setDispatch_strategy(resourceObject.getStrategy());
+        resource.setDefaultDynamicResponse(resourceDao.getResponse(resourceObject.getDefault_resp()));
+        resourceDao.updateResource(resource);
+
+        if(resourceObject.getScript() != null){
+            Script script = resourceDao.resourceScript(resourceObject.getId());
+            script.setText(resourceObject.getScript());
+            resourceDao.updateScript(script);
+        }
+
+        List<DynamicResourceMethod> db_list = resourceDao.listResourceMethods(resourceObject.getId());
+        List<String> new_list = resourceObject.getMethods();
+
+        for(DynamicResourceMethod db_m : db_list){
+            if(!new_list.contains(db_m.getMethod())){
+                resourceDao.deleteResourceMethod(db_m);
+            }
+            else {
+                for(String m : new_list){
+                    boolean exist = false;
+                    for(DynamicResourceMethod i : db_list){
+                        if(m.equals(i.getMethod())){exist = true;}
+                    }
+                    if(!exist){resourceDao.addResourceMethod(new DynamicResourceMethod(resource, m));}
+                }
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public void updateResponse(ResponseObject responseObject) {
+        DynamicResponse response = resourceDao.getResponse(responseObject.getId());
+        response.setCode(responseObject.getCode());
+        response.setName(responseObject.getName());
+        resourceDao.updateResponse(response);
+
+        if(responseObject.getContent() != null){
+            Content content = resourceDao.responseContent(responseObject.getId());
+            content.setText(responseObject.getContent());
+            resourceDao.updateContent(content);
+        }
+
+        if(responseObject.getScript() != null){
+            Script script = resourceDao.responseScript(responseObject.getId());
+            script.setText(responseObject.getScript());
+            resourceDao.updateScript(script);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteResponse(long id) {
+        //TODO
+    }
+
+    @Transactional
+    @Override
+    public void deleteResource(long id) {
+        logger.info("Receive delete resource request: resourceId=" + id);
+        //TODO
     }
 
     private static boolean isAcceptedRequest(List<DynamicResourceMethod> methods, DynamicResourceRequest resourceRequest){

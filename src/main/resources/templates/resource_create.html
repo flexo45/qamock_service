@@ -1,0 +1,59 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <form action="#" th:action="@{/admin/dynamic/add}" th:object="${resource}" method="post">
+        <div>
+            <input type="submit" th:value="#{button.save}" value="create" />
+        </div>
+
+        <div class="ttl">
+            <span th:text="#{resource.create.title}"></span>
+        </div>
+
+        <div>
+            <span th:text="#{resource.create.method}"></span>
+            <div id="methods_selector">
+
+                <span onclick="s_click(this)">GET<input th:field="*{methods}" hidden="hidden" name="method" value="GET" type="checkbox" /></span>
+                <span onclick="s_click(this)">POST<input th:field="*{methods}" hidden="hidden" name="method" value="POST" type="checkbox" /></span>
+                <span onclick="s_click(this)">PUT<input th:field="*{methods}" hidden="hidden" name="method" value="PUT" type="checkbox" /></span>
+                <span onclick="s_click(this)">DELETE<input th:field="*{methods}" hidden="hidden" name="method" value="DELETE" type="checkbox" /></span>
+                <span onclick="s_click(this)">HEAD<input th:field="*{methods}" hidden="hidden" name="method" value="HEAD" type="checkbox" /></span>
+                <span onclick="s_click(this)">OPTIONS<input th:field="*{methods}" hidden="hidden" name="method" value="OPTIONS" type="checkbox" /></span>
+                <span onclick="s_click(this)">TRACE<input th:field="*{methods}" hidden="hidden" name="method" value="TRACE" type="checkbox" /></span>
+                <span onclick="s_click(this)">PATCH<input th:field="*{methods}" hidden="hidden" name="method" value="PATCH" type="checkbox" /></span>
+            </div>
+        </div>
+
+        <div>
+            <span th:text="#{resource.create.url}"></span><input th:field="*{path}" type="text" name="path" id="path" />
+        </div>
+
+        <div>
+            <span th:text="#{resource.create.strategy}"></span>
+            <div id="strategy_selector">
+                <div>
+                    <span th:text="#{resources.strategy.sequence}" onclick="s_show(this)" class="str selected"></span>
+                    <input hidden="hidden" th:field="*{strategy}" type="radio" name="strategy" value="0" checked="checked"/>
+                    <div hidden="hidden">
+                    </div>
+                </div>
+                <div>
+                    <span th:text="#{resources.strategy.random}" onclick="s_show(this)" class="str"></span>
+                    <input hidden="hidden" th:field="*{strategy}" type="radio" name="strategy" value="1"/>
+                    <div hidden="hidden">
+                    </div>
+                </div>
+                <div>
+                    <span th:text="#{resources.strategy.script}" onclick="s_show(this)" class="str"></span>
+                    <input hidden="hidden" th:field="*{strategy}" type="radio" name="strategy" value="2"/>
+                    <div hidden="hidden">
+                        <span th:text="#{resource.create.script}"></span>
+                        <div>
+                            <textarea name="script" th:field="*{script}" id="script"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,8 +1,11 @@
 package org.qamock.service;
 
+import org.qamock.api.json.ResourceObject;
+import org.qamock.api.json.ResponseObject;
 import org.qamock.domain.*;
 import org.qamock.dynamic.DynamicResourceException;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -32,4 +35,15 @@ public interface DynamicResourcesService {
 
     void addTest();
 
+    void createResource(ResourceObject resourceObject);
+
+    void createResponse(ResponseObject responseObject);
+
+    void updateResource(ResourceObject resourceObject);
+
+    void updateResponse(ResponseObject responseObject);
+
+    void deleteResponse(long id);
+
+    void deleteResource(long id);
 }

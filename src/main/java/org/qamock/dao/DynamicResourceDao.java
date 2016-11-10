@@ -10,6 +10,8 @@ public interface DynamicResourceDao {
 
     DynamicResource getResource(long id);
 
+    DynamicResponse getResponse(long id);
+
     Long addResource(DynamicResource resource);
 
     Long addResponse(DynamicResponse response);
@@ -23,6 +25,14 @@ public interface DynamicResourceDao {
     Long addResourceMethod(DynamicResourceMethod resourceMethod);
 
     void updateResource(DynamicResource resource);
+
+    void updateResponse(DynamicResponse response);
+
+    void updateContent(Content content);
+
+    void updateScript(Script script);
+
+    void deleteResourceMethod(DynamicResourceMethod resourceMethod);
 
     List<DynamicResource> listResource();
 

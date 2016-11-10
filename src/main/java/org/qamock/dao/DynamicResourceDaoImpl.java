@@ -29,6 +29,11 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     }
 
     @Override
+    public DynamicResponse getResponse(long id) {
+        return (DynamicResponse) sessionFactory.getCurrentSession().get(DynamicResponse.class, id);
+    }
+
+    @Override
     public Long addResource(DynamicResource resource) {
         return (Long) sessionFactory.getCurrentSession().save(resource);
     }
@@ -61,6 +66,26 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     public void updateResource(DynamicResource resource) {
         sessionFactory.getCurrentSession().merge(resource);
+    }
+
+    @Override
+    public void updateResponse(DynamicResponse response) {
+        sessionFactory.getCurrentSession().merge(response);
+    }
+
+    @Override
+    public void updateContent(Content content) {
+        sessionFactory.getCurrentSession().merge(content);
+    }
+
+    @Override
+    public void updateScript(Script script) {
+        sessionFactory.getCurrentSession().merge(script);
+    }
+
+    @Override
+    public void deleteResourceMethod(DynamicResourceMethod resourceMethod) {
+        sessionFactory.getCurrentSession().delete(resourceMethod);
     }
 
     @Override
