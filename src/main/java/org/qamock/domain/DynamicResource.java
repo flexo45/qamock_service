@@ -75,7 +75,7 @@ public class DynamicResource implements Serializable {
         return "DynamicResource{id=" + id +
                 ", path=" + path +
                 ", dispatch_strategy=" + dispatch_strategy +
-                ", default_response_id=" + defaultDynamicResponse + "}";
+                ", default_response_id=" + /*defaultDynamicResponse.getId() +*/ "}"; //TODO throw exception StackOverFlow or NPE
     }
 
 }

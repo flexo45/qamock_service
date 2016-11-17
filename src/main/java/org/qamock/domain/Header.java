@@ -48,6 +48,19 @@ public class Header implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o){
+        if(o == null) {return false;}
+        if(o instanceof Header){
+            Header other = (Header) o;
+            return other.getName().equals(this.getName())
+                    && other.getDynamicResponse().getId() == this.getDynamicResponse().getId();
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
     public String toString(){
         return "Header{id=" + id + ", name=" + name + ", value=" + value + "}";
     }

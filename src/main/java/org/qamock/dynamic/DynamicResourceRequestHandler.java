@@ -37,6 +37,8 @@ public class DynamicResourceRequestHandler {
 
         //logger.debug("allResponses=" + allResponses);
 
+        Map<String, String> params = new HashMap<String, String>();
+
         if(allResponses.size() != 0){
             switch (resource.getDispatch_strategy()){
                 case 0:
@@ -70,7 +72,6 @@ public class DynamicResourceRequestHandler {
                     //SCRIPT
                     Script script = resourcesService.getResourceScript(resource.getId());
                     if(script != null){
-                        Map<String, String> params = new HashMap<String, String>();
                         Map<String, Object> resultMap = GroovyScriptHandler.executeDispatchScript(script.getText(), params, resourceRequest);
                         String responseName = (String) resultMap.get("response");
                         for(DynamicResponse response : allResponses){
@@ -89,7 +90,12 @@ public class DynamicResourceRequestHandler {
             }
             resource.setLastDynamicResponse(nextResponse);
             resourcesService.updateResource(resource);
-            processResponse(nextResponse);
+            if(params.size() > 0){
+                processResponse(nextResponse, params);
+            }
+            else {
+                processResponse(nextResponse);
+            }
         }
         else {
             logger.warn("No responses found for resource: " + resource + ", user default response{status=200}");
@@ -109,7 +115,9 @@ public class DynamicResourceRequestHandler {
         Content content = resourcesService.getContentOfResponse(dynamicResponse.getId());
         if(content != null){
             try {
-                response.getWriter().print(replaceParams(content.getText(), params));
+                String contentString = replaceParams(content.getText(), params);
+                resourceRequest.setResponseContent(contentString);
+                response.getWriter().print(contentString);
             }
             catch (IOException e){
                 throw new DynamicResourceException("Error occurred on write response content", e);
@@ -141,7 +149,9 @@ public class DynamicResourceRequestHandler {
 
         if(content != null){
             try {
-                response.getWriter().print(content.getText());
+                String contentString = content.getText();
+                resourceRequest.setResponseContent(contentString);
+                response.getWriter().print(contentString);
             }
             catch (IOException e){
                 throw new DynamicResourceException("Error occurred on write response content", e);

@@ -2,6 +2,7 @@ package org.qamock.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.qamock.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,18 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     public DynamicResponse getResponse(long id) {
         return (DynamicResponse) sessionFactory.getCurrentSession().get(DynamicResponse.class, id);
+    }
+
+    @Override
+    public MockRequest getMockRequest(long logId) {
+        DynamicRequestLog log = (DynamicRequestLog) sessionFactory.getCurrentSession().load(DynamicRequestLog.class, logId);
+        return (MockRequest) sessionFactory.getCurrentSession().load(MockRequest.class, log.getMockRequest().getId());
+    }
+
+    @Override
+    public MockResponse getMockResponse(long logId) {
+        DynamicRequestLog log = (DynamicRequestLog) sessionFactory.getCurrentSession().load(DynamicRequestLog.class, logId);
+        return (MockResponse) sessionFactory.getCurrentSession().load(MockResponse.class, log.getMockResponse().getId());
     }
 
     @Override
@@ -64,6 +77,21 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     }
 
     @Override
+    public Long addDynamicRequestLog(DynamicRequestLog requestLog) {
+        return (Long) sessionFactory.getCurrentSession().save(requestLog);
+    }
+
+    @Override
+    public Long addMockRequest(MockRequest request) {
+        return (Long) sessionFactory.getCurrentSession().save(request);
+    }
+
+    @Override
+    public Long addMockResponse(MockResponse response) {
+        return (Long) sessionFactory.getCurrentSession().save(response);
+    }
+
+    @Override
     public void updateResource(DynamicResource resource) {
         sessionFactory.getCurrentSession().merge(resource);
     }
@@ -71,6 +99,11 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     public void updateResponse(DynamicResponse response) {
         sessionFactory.getCurrentSession().merge(response);
+    }
+
+    @Override
+    public void updateResponseHeader(Header header) {
+        sessionFactory.getCurrentSession().merge(header);
     }
 
     @Override
@@ -89,6 +122,49 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     }
 
     @Override
+    public void deleteResponseHeader(Header header) {
+        sessionFactory.getCurrentSession().delete(header);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deleteDynamicRequestLogsByResource(long resourceId) {
+        DynamicResource resource =
+                (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DynamicRequestLog.class);
+        List<DynamicRequestLog> requestLogList = criteria.add(Restrictions.eq("dynamicResource", resource)).list();
+
+        for (DynamicRequestLog requestLog : requestLogList){
+            MockRequest mockRequest = (MockRequest) sessionFactory.getCurrentSession()
+                    .load(MockRequest.class, requestLog.getMockRequest().getId());
+            MockResponse mockResponse = (MockResponse) sessionFactory.getCurrentSession()
+                    .load(MockResponse.class, requestLog.getMockResponse().getId());
+
+            sessionFactory.getCurrentSession().delete(mockRequest);
+            sessionFactory.getCurrentSession().delete(mockResponse);
+            sessionFactory.getCurrentSession().delete(requestLog);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deleteDynamicRequestLogsAll() {
+        for(DynamicRequestLog requestLog : (List<DynamicRequestLog>) sessionFactory.getCurrentSession()
+                .createQuery("from DynamicRequestLog").list()){
+
+            MockRequest mockRequest = (MockRequest) sessionFactory.getCurrentSession()
+                    .load(MockRequest.class, requestLog.getMockRequest().getId());
+            MockResponse mockResponse = (MockResponse) sessionFactory.getCurrentSession()
+                    .load(MockResponse.class, requestLog.getMockResponse().getId());
+
+            sessionFactory.getCurrentSession().delete(mockRequest);
+            sessionFactory.getCurrentSession().delete(mockResponse);
+            sessionFactory.getCurrentSession().delete(requestLog);
+
+        }
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<DynamicResource> listResource() {
         return sessionFactory.getCurrentSession().createQuery("from DynamicResource").list();
@@ -96,8 +172,31 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
 
     @Override
     @SuppressWarnings("unchecked")
+    public List<DynamicRequestLog> listRequestLogs(int size) {
+        Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(DynamicRequestLog.class)
+                .addOrder(Order.desc("id"))
+                .setMaxResults(size);
+        return criteria.list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<DynamicRequestLog> listRequestLogsByResource(long resourceId, int size) {
+        DynamicResource resource =
+                (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
+        Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(DynamicRequestLog.class)
+                .addOrder(Order.desc("id"))
+                .setMaxResults(size);
+        return criteria.add(Restrictions.eq("dynamicResponse", resource)).list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public List<DynamicResourceMethod> listResourceMethods(long resourceId) {
-        DynamicResource resource = (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
+        DynamicResource resource =
+                (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DynamicResourceMethod.class);
         return criteria.add(Restrictions.eq("dynamicResource", resource)).list();
     }
@@ -105,7 +204,8 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<DynamicResponse> listDynamicResponses(long resourceId) {
-        DynamicResource resource = (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
+        DynamicResource resource =
+                (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(DynamicResponse.class);
         return criteria.add(Restrictions.eq("dynamicResource", resource)).list();
     }
@@ -113,7 +213,8 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<Header> listResponseHeaders(long responseId) {
-        DynamicResponse response = (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
+        DynamicResponse response =
+                (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Header.class);
         return criteria.add(Restrictions.eq("dynamicResponse", response)).list();
     }
@@ -121,22 +222,46 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     @Override
     @SuppressWarnings("unchecked")
     public Content responseContent(long responseId) {
-        DynamicResponse response = (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
+        DynamicResponse response =
+                (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Content.class);
         return (Content) criteria.add(Restrictions.eq("dynamicResponse", response)).uniqueResult();
     }
 
     @Override
     public Script responseScript(long responseId) {
-        DynamicResponse response = (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
+        DynamicResponse response =
+                (DynamicResponse) sessionFactory.getCurrentSession().load(DynamicResponse.class, responseId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Script.class);
         return (Script) criteria.add(Restrictions.eq("dynamicResponse", response)).uniqueResult();
     }
 
     @Override
     public Script resourceScript(long resourceId) {
-        DynamicResource resource = (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
+        DynamicResource resource =
+                (DynamicResource) sessionFactory.getCurrentSession().load(DynamicResource.class, resourceId);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Script.class);
         return (Script) criteria.add(Restrictions.eq("dynamicResource", resource)).uniqueResult();
+    }
+
+    @Override
+    public Sequence getSequence(String name) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Sequence.class);
+        return (Sequence) criteria.add(Restrictions.eq("name", name)).uniqueResult();
+    }
+
+    @Override
+    public void addSequence(Sequence sequence) {
+        sessionFactory.getCurrentSession().save(sequence);
+    }
+
+    @Override
+    public void updateSequence(Sequence sequence) {
+        sessionFactory.getCurrentSession().merge(sequence);
+    }
+
+    @Override
+    public void deleteSequence(Sequence sequence) {
+        sessionFactory.getCurrentSession().delete(sequence);
     }
 }

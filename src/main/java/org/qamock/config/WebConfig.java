@@ -21,7 +21,7 @@ import javax.servlet.ServletRegistration;
 import java.util.Locale;
 
 @Configuration
-@ImportResource("classpath:root-context.xml")
+//@ImportResource("classpath:root-context.xml")
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter{
 

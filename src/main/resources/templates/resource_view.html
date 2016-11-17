@@ -1,8 +1,9 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <div>
-        <button th:text="#{button.edit}"></button>
+        <button th:text="#{button.edit}" th:onclick="'openResourceEdit(' + ${id} + ')'"></button>
         <button th:text="#{button.delete}"></button>
+        <button th:text="#{button.response.add}" th:onclick="'openAddResponse(' + ${id} + ')'"></button>
     </div>
     <div>
 
@@ -30,7 +31,7 @@
             <div th:case="'1'">
                 <span th:text="#{resources.strategy.random}"></span>
                 <div>
-                    <span th:text="#{resource.response.last}"></span>
+                    <div th:text="#{resource.response.last}"></div>
                     <span th:text="${last_resp} != null ? ${last_resp.id} : #{resource.response.empty}"></span>
                 </div>
             </div>
@@ -58,7 +59,7 @@
                         <th>#</th>
                         <th th:text="#{response.name.title}"></th>
                     </tr>
-                    <tr class="t_row" th:each="resp : ${responses}">
+                    <tr th:onclick="'openResponseView(' + ${id} + ',' + ${resp.id} + ')'" class="t_row" th:each="resp : ${responses}">
                         <td th:text="${resp.id}"></td>
                         <td th:text="${resp.name}"></td>
                     </tr>

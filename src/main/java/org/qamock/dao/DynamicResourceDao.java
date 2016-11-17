@@ -12,6 +12,10 @@ public interface DynamicResourceDao {
 
     DynamicResponse getResponse(long id);
 
+    MockRequest getMockRequest(long logId);
+
+    MockResponse getMockResponse(long logId);
+
     Long addResource(DynamicResource resource);
 
     Long addResponse(DynamicResponse response);
@@ -24,9 +28,17 @@ public interface DynamicResourceDao {
 
     Long addResourceMethod(DynamicResourceMethod resourceMethod);
 
+    Long addDynamicRequestLog(DynamicRequestLog requestLog);
+
+    Long addMockRequest(MockRequest request);
+
+    Long addMockResponse(MockResponse response);
+
     void updateResource(DynamicResource resource);
 
     void updateResponse(DynamicResponse response);
+
+    void updateResponseHeader(Header header);
 
     void updateContent(Content content);
 
@@ -34,7 +46,17 @@ public interface DynamicResourceDao {
 
     void deleteResourceMethod(DynamicResourceMethod resourceMethod);
 
+    void deleteResponseHeader(Header header);
+
+    void deleteDynamicRequestLogsByResource(long resourceId);
+
+    void deleteDynamicRequestLogsAll();
+
     List<DynamicResource> listResource();
+
+    List<DynamicRequestLog> listRequestLogs(int size);
+
+    List<DynamicRequestLog> listRequestLogsByResource(long resourceId, int size);
 
     List<DynamicResourceMethod> listResourceMethods(long resourceId);
 
@@ -47,5 +69,13 @@ public interface DynamicResourceDao {
     Script responseScript(long responseId);
 
     Script resourceScript(long resourceId);
+
+    Sequence getSequence(String name);
+
+    void addSequence(Sequence sequence);
+
+    void updateSequence(Sequence sequence);
+
+    void deleteSequence(Sequence sequence);
 
 }

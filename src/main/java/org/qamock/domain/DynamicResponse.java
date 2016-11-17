@@ -53,6 +53,6 @@ public class DynamicResponse implements Serializable {
         return "DynamicResponse{id=" + id +
                 ", name=" + name +
                 ", code=" + code +
-                ", dynamic_resource_id=" + dynamicResource + "}";
+                ", dynamic_resource_id=" + /*dynamicResource +*/ "}"; //TODO NULL POINTER IN SAME CASE
     }
 }

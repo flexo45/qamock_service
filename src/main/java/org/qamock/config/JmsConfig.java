@@ -1,20 +1,14 @@
 package org.qamock.config;
 
 import com.sun.messaging.QueueConnectionFactory;
-import org.qamock.dynamic.DynamicResourceRequestQueueListener;
-import org.qamock.dynamic.DynamicResourceRequestQueueListenerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @EnableJms
 @Configuration
 public class JmsConfig {
-
-    @Bean
-    public DynamicResourceRequestQueueListener dynamicResourceRequestQueueListener(){
-        return new DynamicResourceRequestQueueListenerImpl();
-    }
 
     @Bean
     public QueueConnectionFactory connectionFactoryGlassFish(){

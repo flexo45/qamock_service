@@ -52,6 +52,7 @@ public class DynamicResourceRequest implements Serializable {
     private Map<String, String> headers;
     private String content;
     private HttpServletResponse response;
+    private String responseContent;
 
     public String method(){return this.method;}
 
@@ -64,6 +65,10 @@ public class DynamicResourceRequest implements Serializable {
     public String content(){return this.content;}
 
     public HttpServletResponse response(){return this.response;}
+
+    public String getResponseContent(){return this.responseContent;}
+
+    public void setResponseContent(String responseContent){this.responseContent = responseContent;}
 
 
 
@@ -81,7 +86,7 @@ public class DynamicResourceRequest implements Serializable {
         return result;
     }
 
-    public static String getContent(@NotNull ServletInputStream inputStream) throws IOException{
+    public static String getContent(@NotNull InputStream inputStream) throws IOException{
 
         StringBuilder stringBuilder = new StringBuilder();
 

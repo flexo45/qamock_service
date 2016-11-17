@@ -20,11 +20,13 @@ public class Script implements Serializable {
     public String getText() {return text;}
     public void setText(String text) {this.text = text;}
 
+    @ManyToOne
     @JoinColumn(name = "dynamic_resource_id", nullable = true)
     private DynamicResource dynamicResource;
     public DynamicResource getDynamicResource() {return dynamicResource;}
     public void setDynamicResource(DynamicResource resource) {this.dynamicResource = resource;}
 
+    @ManyToOne
     @JoinColumn(name = "dynamic_response_id", nullable = true)
     private DynamicResponse dynamicResponse;
     public DynamicResponse getDynamicResponse() {return dynamicResponse;}
