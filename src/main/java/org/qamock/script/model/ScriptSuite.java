@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class ScriptSuite implements Runnable, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(ScriptSuite.class);

@@ -2,6 +2,7 @@
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
     <div>
+        <button th:text="#{button.back}" th:onclick="'openResource(' + ${resource_id} + ')'"></button>
         <button th:onclick="'openResponseEdit(' + ${resource_id} + ',' + ${id} + ')'" th:text="#{button.edit}"></button>
     </div>
 

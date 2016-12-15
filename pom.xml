@@ -14,6 +14,7 @@
         <org.springframework-version>4.3.3.RELEASE</org.springframework-version>
         <org.security.springframework-version>4.1.3.RELEASE</org.security.springframework-version>
         <org.springframework.roo-version>1.3.2.RELEASE</org.springframework.roo-version>
+
         <org.aspectj-version>1.6.9</org.aspectj-version>
         <org.aspectj.tools>1.6.2</org.aspectj.tools>
         <org.slf4j-version>1.5.10</org.slf4j-version>
@@ -21,6 +22,7 @@
         <org.hibernate.core>3.6.10.Final</org.hibernate.core> <!-- 4.3.10.Final -->
         <org.hibernate.annotations>3.5.6-Final</org.hibernate.annotations> <!-- 3.5.6-Final 3.4.0.GA -->
         <org.hibernate.commons.annotations>4.0.5.Final-redhat-2</org.hibernate.commons.annotations>
+
         <com.h2database>1.4.191</com.h2database>
         <javax.transaction>1.2</javax.transaction>
         <javax.persistence>1.0.2</javax.persistence>
@@ -37,7 +39,7 @@
                     <target>${java-version}</target>
                 </configuration>
             </plugin>
-            <!--
+            <!-- MAKE WAR PLUGIN
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -46,6 +48,7 @@
                 </configuration>
             </plugin>
             -->
+            <!-- HZ
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -59,14 +62,13 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
+            <!-- MOJO PLUGIN
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-                <!-- Have to use version 1.2 since version 1.3 does not appear to work
-                    with ITDs -->
                 <version>1.2</version>
                 <dependencies>
-                    <!-- You must use Maven 2.0.9 or above or these are ignored (see MNG-2972) -->
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjrt</artifactId>
@@ -92,6 +94,7 @@
                     <target>${java-version}</target>
                 </configuration>
             </plugin>
+            -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -120,6 +123,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- TEST STARTER
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -130,11 +134,14 @@
                     </excludes>
                 </configuration>
             </plugin>
+            -->
+            <!-- RUN WAR FILE, NO DEPLOY
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <version>1.0-beta-1</version>
             </plugin>
+            -->
         </plugins>
     </build>
 
@@ -146,14 +153,22 @@
 
     <dependencies>
 
+        <!-- Spring bootstrap -->
+
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-            <version>${javax.transaction}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-        <!-- Spring bootstrap -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -177,37 +192,31 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- Spring jms -->
-
-        <!--<dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms-api</artifactId>
-            <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${user.home}/maven_system_lib/jms-api-2.0.jar</systemPath>
-        </dependency> -->
-
-        <dependency>
-            <groupId>org.glassfish.mq</groupId>
-            <artifactId>imq</artifactId>
-            <version>${org.glassfish.mq}</version>
-        </dependency>
-
+        <!-- ACTIVE MQ PARENT BASED DEPENDENCIES
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
         </dependency>
+        -->
+
+        <!-- Spring framework -->
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${org.springframework-version}</version>
         </dependency>
 
-        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -229,6 +238,26 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+
+        <!-- Spring security -->
+
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
             <version>${org.security.springframework-version}</version>
@@ -244,11 +273,96 @@
             <version>${org.security.springframework-version}</version>
         </dependency>
 
-        <!--<dependency>
+        <!-- Spring Roo dependencies -->
+
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.annotations</artifactId>
+            <version>${org.springframework.roo-version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Javax APIs -->
+
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>javax.transaction-api</artifactId>
+            <version>${javax.transaction}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+
+        <!-- Javax JMS API
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms-api</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${user.home}/maven_system_lib/jms-api-2.0.jar</systemPath>
+        </dependency>
+        -->
+
+        <!-- Javax JPA
+        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>${javax.persistence}</version>
-        </dependency>-->
+        </dependency>
+        -->
+
+        <!-- Javax JSP API
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+
+        <!-- Javax JSTL library
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        -->
+
+        <!-- Utils and Drivers -->
+
+        <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>imq</artifactId>
+            <version>${org.glassfish.mq}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -268,46 +382,43 @@
             <version>2.0</version>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>${org.hibernate.annotations}</version>
-        </dependency>-->
-
-        <!--<dependency>
-            <groupId>org.hibernate.common</groupId>
-            <artifactId>hibernate-commons-annotations</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>-->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${com.h2database}</version>
         </dependency>
 
-        <!-- Roo dependencies -->
         <dependency>
-            <groupId>org.springframework.roo</groupId>
-            <artifactId>org.springframework.roo.annotations</artifactId>
-            <version>${org.springframework.roo-version}</version>
-            <scope>provided</scope>
+            <groupId>oracle.jdbc</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>7.0</version>
+            <scope>system</scope>
+            <systemPath>${user.home}/maven_system_lib/ojdbc7.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.6</version>
+        </dependency>
+
+        <!-- Hibernate annotations
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>${org.hibernate.annotations}</version>
+        </dependency>-->
+
+        <!--
+        <dependency>
+            <groupId>org.hibernate.common</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>4.0.1.Final</version>
+        </dependency>
+        -->
+
         <!-- AspectJ -->
+        <!--
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
@@ -319,6 +430,7 @@
             <artifactId>aspectjtools</artifactId>
             <version>${org.aspectj.tools}</version>
         </dependency>
+        -->
 
         <!-- Logging -->
         <!--
@@ -364,50 +476,8 @@
             <scope>runtime</scope>
         </dependency>
         -->
-        <!-- @Inject -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-
-        <!-- Servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- TEMA -->
-
-        <dependency>
-            <groupId>oracle.jdbc</groupId>
-            <artifactId>ojdbc</artifactId>
-            <version>7.0</version>
-            <scope>system</scope>
-            <systemPath>${user.home}/maven_system_lib/ojdbc7.jar</systemPath>
-        </dependency>
 
         <dependency>
             <groupId>com.temafon</groupId>
@@ -423,18 +493,6 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${user.home}/maven_system_lib/audit-common-1.0.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
         </dependency>
 
     </dependencies>

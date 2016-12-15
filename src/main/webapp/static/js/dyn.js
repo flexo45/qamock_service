@@ -102,7 +102,7 @@ function createResource(){
         data: $("#add_resource").serialize(),
         dataType: "text",
         success: function(data){
-            alert("SUCCESS");
+            alert("Create successful");
             loadResourcesView();
         },
         error: function(data){
@@ -119,7 +119,7 @@ function createResponse(resource_id){
         data: $("#add_response").serialize(),
         dataType: "text",
         success: function(data){
-            alert("SUCCESS");
+            alert("Create successful");
             openResource(resource_id);
         },
         error: function(data){
@@ -136,13 +136,51 @@ function updateResource(resource_id){
         data: $("#update_resource").serialize(),
         dataType: "text",
         success: function(data){
-            alert("SUCCESS");
+            alert("Update successful");
             openResource(resource_id);
         },
         error: function(data){
             alert("ERROR " + data.responseText);
         }
     });
+}
+
+function deleteResource(resource_id){
+
+    var result = confirm("Are you sure you want to delete the resource id=" + resource_id + " ?")
+
+    if(result){
+        $.ajax({
+            type: "POST",
+            url: "admin/dynamic/" + resource_id + "/delete",
+            success: function(data){
+                alert("Delete successful");
+                loadResourcesView();
+            },
+            error: function(data){
+                alert("ERROR " + data.responseText);
+            }
+        });
+    }
+}
+
+function deleteResponse(resource_id, response_id){
+
+    var result = confirm("Are you sure you want to delete the response id=" + response_id + " ?")
+
+    if(result){
+        $.ajax({
+            type: "POST",
+            url: "admin/dynamic/" + resource_id + "/response/" + response_id + "/delete",
+            success: function(data){
+                alert("Delete successful");
+                loadResourcesView();
+            },
+            error: function(data){
+                alert("ERROR " + data.responseText);
+            }
+        });
+    }
 }
 
 function updateResponse(resource_id, response_id){
@@ -153,7 +191,7 @@ function updateResponse(resource_id, response_id){
         data: $("#update_response").serialize(),
         dataType: "text",
         success: function(data){
-            alert("SUCCESS");
+            alert("Update successful");
             openResponseView(resource_id, response_id);
         },
         error: function(data){

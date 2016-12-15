@@ -1,41 +1,55 @@
 package org.qamock.dao;
 
-import org.qamock.config.XmlFileScriptsDataSource;
-import org.qamock.script.model.ScriptSuite;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.qamock.domain.ScriptSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.transaction.Transactional;
+import java.util.List;
 
+@Repository
+@Transactional
 public class ScriptDaoImpl implements ScriptsDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ScriptDaoImpl.class);
 
     @Autowired
-    XmlFileScriptsDataSource scriptDataSource;
+    SessionFactory sessionFactory;
 
     @Override
-    public Map<String, ScriptSuite> getSuites() throws Exception{
-        Map<String, ScriptSuite> result = new HashMap<String, ScriptSuite>();
-        String[] scriptNameList = scriptDataSource.listScripts();
-        for(int i = 0; i < scriptNameList.length; i++){
-            try {
-                ScriptSuite suite = scriptDataSource.readSuite(scriptNameList[i]);
-                logger.info("Script '" + suite.getName() + "' readed");
-                result.put(suite.getName(), suite);
-            }
-            catch (Exception e){
-                logger.error("Error on read script: " + scriptNameList[i], e);
-            }
-        }
-
-        return result;
+    @SuppressWarnings("unchecked")
+    public List<ScriptSuite> list() {
+        return sessionFactory.getCurrentSession().createQuery("from ScriptSuite").list();
     }
 
     @Override
-    public ScriptSuite getSuite(String name) throws Exception {
-        return scriptDataSource.readSuite(name);
+    public ScriptSuite get(String name) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ScriptSuite.class);
+        return (ScriptSuite) criteria.add(Restrictions.eq("name", name)).uniqueResult();
+    }
+
+    @Override
+    public ScriptSuite get(long id) {
+        return (ScriptSuite) sessionFactory.getCurrentSession().get(ScriptSuite.class, id);
+    }
+
+    @Override
+    public void add(ScriptSuite scriptSuite) {
+        sessionFactory.getCurrentSession().save(scriptSuite);
+    }
+
+    @Override
+    public void update(ScriptSuite scriptSuite) {
+        sessionFactory.getCurrentSession().merge(scriptSuite);
+    }
+
+    @Override
+    public void delete(ScriptSuite scriptSuite) {
+        sessionFactory.getCurrentSession().delete(scriptSuite);
     }
 }

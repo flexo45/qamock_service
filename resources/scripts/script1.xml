@@ -1,0 +1,59 @@
+<suite name="subscribe_1">
+    <conf>
+        <connection id="0" value="jdbc:oracle:thin:auth_dev1/PASS_VALUE@192.168.38.16:1521:oradev" pass="qwertydev"/>
+    </conf>
+    <properties>
+        <property key="guid" value=""/>
+        <property key="msisdn" value=""/>
+    </properties>
+    <steps>
+        <step id="0" type="http">
+            <method>get</method>
+            <path>http://192.168.37.38:8081/profilesync/gettoken</path>
+            <query>msisdn=${msisdn}%AND%service_name=playboy%AND%channel=SUBS_API_TEST</query>
+            <headers>
+                <header>
+                    <key>Authorization</key>
+                    <val>Basic dGVtYTp0ZW1h</val>
+                </header>
+            </headers>
+            <extractors>
+                <extract target-name="header" value="X-GUID" to="guid" />
+            </extractors>
+        </step>
+        <step id="1" type="http">
+            <method>get</method>
+            <path>http://192.168.37.3:8080/partnersgw/subscribe</path>
+            <query>msisdn=${msisdn}%AND%service_code=55555551%AND%guid=${guid}</query>
+            <headers>
+                <header>
+                    <key>Authorization</key>
+                    <val>Basic dGVtYTp0ZW1h</val>
+                </header>
+            </headers>
+        </step>
+        <step id="2" type="jdbc" connection="auth_dev1">
+            <statement>
+                <type>select</type>
+                <query>select id from users where msisdn = ${msisdn}</query>
+            </statement>
+            <params>
+                <param>id</param>
+            </params>
+            <extractors>
+                <extract target-name="param" value="id" to="user_id"/>
+            </extractors>
+        </step>
+        <step id="3" type="http">
+            <method>post</method>
+            <path>http://applike01.dev.tema:8085/echo</path>
+            <headers>
+                <header>
+                    <key>Content-Type</key>
+                    <val>text/xml</val>
+                </header>
+            </headers>
+            <content>%3Ctest%20msisdn%3D%22${user_id}%22%3E%3C%2Ftest%3E</content>
+        </step>
+    </steps>
+</suite>

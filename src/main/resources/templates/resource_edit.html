@@ -2,7 +2,9 @@
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
     <div>
+        <button th:text="#{button.back}" th:onclick="'openResource(' + ${resource.id} + ')'"></button>
         <button th:onclick="'updateResource(' + ${resource.id} + ')'" th:text="#{button.save}"></button>
+        <button th:onclick="'deleteResource(' + ${resource.id} + ')'" th:text="#{button.delete}"></button>
     </div>
 
     <form action="#" th:action="@{/admin}" id="update_resource" th:object="${resource}" method="post">
@@ -50,6 +52,14 @@
 
         <div>
             <span th:text="#{resource.create.url}"></span><input th:field="*{path}" type="text" name="path" id="path" />
+        </div>
+
+        <div>
+            <span th:text="#{resource.disable.logging}"></span>
+            <label for="logOn">On</label>
+            <input id="logOn" th:field="*{logging}" type="radio" name="logging" value="0" checked="checked" />
+            <label for="logOff">Off</label>
+            <input id="logOff" th:field="*{logging}" type="radio" name="logging" value="1" />
         </div>
 
         <div>

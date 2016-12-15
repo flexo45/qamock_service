@@ -1,19 +1,14 @@
 package org.qamock.config;
 
-import oracle.jdbc.pool.OracleDataSource;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.qamock.jdbc.JDBCPoolFactory;
+import org.qamock.jdbc.JDBCPoolFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
-import org.springframework.boot.context.properties.DeprecatedConfigurationProperty;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -24,8 +19,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.annotation.sql.DataSourceDefinition;
-import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
@@ -35,6 +28,7 @@ public class DBConfig {
     private static final Logger logger = LoggerFactory.getLogger(DBConfig.class);
 
     @Bean
+    @Primary
     public HibernateTransactionManager transactionManager(){
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
@@ -56,31 +50,24 @@ public class DBConfig {
         return propertyConfigurer;
     }*/
 
-    @Bean
-    public JDBCPoolFactory jdbcPoolFactory(){
-        JDBCPoolFactory jdbcPoolFactory = new JDBCPoolFactory();
-        //jdbcPoolFactory.setMaxIdle(2);
-        //jdbcPoolFactory.setMaxConnLifetimeMillis(30000);
+    @Bean(destroyMethod = "close")
+    public JDBCPoolFactoryImpl jdbcPoolFactory(){
+        JDBCPoolFactoryImpl jdbcPoolFactory = new JDBCPoolFactoryImpl();
+        jdbcPoolFactory.setMaxIdle(2);
+        jdbcPoolFactory.setMaxConnLifetimeMillis(30000);
         return jdbcPoolFactory;
     }
 
-    @Bean(destroyMethod = "close")
-    public BasicDataSource jdbcDataSource(){
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setMaxIdle(2);
-        basicDataSource.setMaxConnLifetimeMillis(30000);
-        basicDataSource.setDriverClassName("");
-        return basicDataSource;
-    }
-
-    @Bean
+    /*@Bean
+    @Qualifier(value = "jdbcTx")
     public DataSourceTransactionManager jdbcTransactionManager(){
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-        transactionManager.setDataSource(jdbcDataSource());
+        //transactionManager.setDataSource(jdbcDataSource());
         return transactionManager;
-    }
+    }*/
 
     @Bean
+    @Primary
     public DriverManagerDataSource dataSource(){
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("org.h2.Driver");
@@ -94,10 +81,11 @@ public class DBConfig {
     public LocalSessionFactoryBean sessionFactory(){
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setConfigLocation(new PathResource("hibernate.cfg.xml"));
+        sessionFactory.setConfigLocation(new ClassPathResource("classpath:hibernate.cfg.xml"));
         return sessionFactory;
     }
 
+    /*
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -114,5 +102,6 @@ public class DBConfig {
 
         return em;
     }
+    */
 
 }

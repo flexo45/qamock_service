@@ -6,20 +6,65 @@ import org.qamock.api.json.ApiResult;
 import org.qamock.api.json.MOMessage;
 import org.qamock.api.json.MTMessage;
 import org.qamock.api.json.TextMessage;
+import org.qamock.service.EmailService;
 import org.qamock.service.JmsService;
+import org.qamock.xml.XmlProcessor;
+import org.qamock.xml.object.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jms.JMSException;
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class ApiController {
 
+    private static Logger logger = LoggerFactory.getLogger(ApiController.class);
+
     @Autowired
-    private JmsService jmsService;
+    JmsService jmsService;
+
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    XmlProcessor xmlProcessor;
+
+    @PostMapping(value = "/api/mail")
+    @ResponseBody
+    public ApiResult sendMail(@RequestBody String content){
+        ApiResult result = new ApiResult();
+
+
+
+        try {
+            Email email = (Email) xmlProcessor.stringToObject(content);
+            if(email.getTo() == null || email.getMessage() == null || email.getSubject() == null){
+                result.setStatusCode(400);
+                result.setStatusText("Required parameters is null");
+            }
+            else {
+                emailService.sendMail(email);
+                result.setStatusText("success");
+                result.setDescription("email was sanded");
+            }
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            result.setStatusCode(500);
+            result.setStatusText("Error on parsing xml");
+            result.setDescription(ioe.getMessage());
+        }
+
+        return result;
+    }
 
     @RequestMapping(value = "/api/jms/text", method = RequestMethod.POST)
     @ResponseBody

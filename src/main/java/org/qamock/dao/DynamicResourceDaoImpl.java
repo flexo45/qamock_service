@@ -117,6 +117,59 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
     }
 
     @Override
+    public void deleteResource(DynamicResource resource) {
+
+        DynamicResource dynamicResource =
+                (DynamicResource) sessionFactory.getCurrentSession().get(DynamicResource.class, resource.getId());
+
+        dynamicResource.setDefaultDynamicResponse(null);
+
+        dynamicResource.setLastDynamicResponse(null);
+
+        deleteDynamicRequestLogsByResource(dynamicResource.getId());
+
+        for(DynamicResourceMethod method : listResourceMethods(dynamicResource.getId())){
+            deleteResourceMethod(method);
+        }
+
+        for(DynamicResponse response : listDynamicResponses(dynamicResource.getId())){
+            deleteResponse(response);
+        }
+
+        Script script = resourceScript(dynamicResource.getId());
+        if(script != null){
+            deleteScript(script);
+        }
+
+        sessionFactory.getCurrentSession().delete(dynamicResource);
+    }
+
+    @Override
+    public void deleteResponse(DynamicResponse response) {
+
+        for(Header header : listResponseHeaders(response.getId())){
+            deleteResponseHeader(header);
+        }
+
+        Script script = responseScript(response.getId());
+        if(script != null){
+            deleteScript(script);
+        }
+
+        Content content = responseContent(response.getId());
+        if(content != null){
+            sessionFactory.getCurrentSession().delete(content);
+        }
+
+        sessionFactory.getCurrentSession().delete(response);
+    }
+
+    @Override
+    public void deleteScript(Script script) {
+        sessionFactory.getCurrentSession().delete(script);
+    }
+
+    @Override
     public void deleteResourceMethod(DynamicResourceMethod resourceMethod) {
         sessionFactory.getCurrentSession().delete(resourceMethod);
     }

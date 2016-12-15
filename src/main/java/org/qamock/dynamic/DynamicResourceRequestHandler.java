@@ -3,6 +3,7 @@ package org.qamock.dynamic;
 import org.qamock.domain.*;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
 import org.qamock.dynamic.script.GroovyScriptHandler;
+import org.qamock.dynamic.script.ScriptHandler;
 import org.qamock.service.DynamicResourcesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,15 @@ public class DynamicResourceRequestHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceRequestHandler.class);
 
-    public DynamicResourceRequestHandler(@NotNull DynamicResourceRequest resourceRequest, @NotNull DynamicResourcesService resourcesService){
+    public DynamicResourceRequestHandler(@NotNull DynamicResourceRequest resourceRequest,
+                                         @NotNull DynamicResourcesService resourcesService,
+                                         @NotNull ScriptHandler scriptHandler){
+        this.scriptHandler = scriptHandler;
         this.resourceRequest = resourceRequest;
         this.resourcesService = resourcesService;
     }
+
+    private ScriptHandler scriptHandler;
 
     private DynamicResourcesService resourcesService;
 
@@ -72,15 +78,33 @@ public class DynamicResourceRequestHandler {
                     //SCRIPT
                     Script script = resourcesService.getResourceScript(resource.getId());
                     if(script != null){
-                        Map<String, Object> resultMap = GroovyScriptHandler.executeDispatchScript(script.getText(), params, resourceRequest);
-                        String responseName = (String) resultMap.get("response");
-                        for(DynamicResponse response : allResponses){
-                            if(response.getName().equals(responseName)){
-                                nextResponse = response;
+                        try {
+                            Map<String, Object> resultMap = scriptHandler.executeDispatchScript(script.getText(), params, resourceRequest);
+                            String responseName = (String) resultMap.get("response");
+                            if(responseName != null){
+
+                                for(DynamicResponse response : allResponses){
+                                    if(response.getName().equals(responseName)){
+                                        nextResponse = response;
+                                        break;
+                                    }
+                                }
+
+                                if(nextResponse.getId() <= 0) {
+                                    logger.warn("Response with name: " + responseName + " not found for: " + resource);
+                                }
+                                else {
+                                    logger.info("Found response from script: " + nextResponse);
+                                }
                             }
                             else {
-                                logger.warn("Response with name: " + responseName + " not found for: " + resource);
+                                logger.warn("Script didn't return any response name, for resource: " + resource + ", user default response{status=200}");
                             }
+                        }
+                        catch (RuntimeException re){
+                            logger.error("Dispatch script has error, resource: " + resource, re);
+                            nextResponse.setCode(500);
+                            nextResponse.setName("script_error");
                         }
                     }
                     else {
@@ -88,14 +112,19 @@ public class DynamicResourceRequestHandler {
                     }
                     break;
             }
-            resource.setLastDynamicResponse(nextResponse);
-            resourcesService.updateResource(resource);
+
+            if(nextResponse.getId() > 0){
+                resource.setLastDynamicResponse(nextResponse);
+                resourcesService.updateResource(resource);
+            }
+
             if(params.size() > 0){
                 processResponse(nextResponse, params);
             }
             else {
                 processResponse(nextResponse);
             }
+
         }
         else {
             logger.warn("No responses found for resource: " + resource + ", user default response{status=200}");
@@ -105,6 +134,8 @@ public class DynamicResourceRequestHandler {
 
     private void processResponse(DynamicResponse dynamicResponse, Map<String, String> params) throws DynamicResourceException{
 
+        logger.info("Response processing started: " + dynamicResponse + ", with params: " + params);
+
         HttpServletResponse response = resourceRequest.response();
         response.setStatus(dynamicResponse.getCode());
 
@@ -113,6 +144,7 @@ public class DynamicResourceRequestHandler {
         }
 
         Content content = resourcesService.getContentOfResponse(dynamicResponse.getId());
+
         if(content != null){
             try {
                 String contentString = replaceParams(content.getText(), params);
@@ -126,9 +158,13 @@ public class DynamicResourceRequestHandler {
 
         processResponseScript(dynamicResponse, params);
 
+        logger.info("Complete process response: " + response);
+
     }
 
     private void processResponse(DynamicResponse dynamicResponse) throws DynamicResourceException{
+
+        logger.info("Response processing started: " + dynamicResponse);
 
         Content content;
 
@@ -142,6 +178,10 @@ public class DynamicResourceRequestHandler {
         if(dynamicResponse.getName().equals("default")){
             response.addHeader("Content-Type", "application/json");
             content = new Content("{\"code\":200,\"text\":\"default mock response\"}", dynamicResponse);
+        }
+        else if(dynamicResponse.getName().equals("script_error")){
+            response.addHeader("Content-Type", "application/json");
+            content = new Content("{\"code\":500,\"text\":\"dispatch script error\"}", dynamicResponse);
         }
         else {
             content = resourcesService.getContentOfResponse(dynamicResponse.getId());
@@ -160,19 +200,27 @@ public class DynamicResourceRequestHandler {
 
         processResponseScript(dynamicResponse);
 
+        logger.info("Complete process response: " + response);
+
     }
 
     private void processResponseScript(DynamicResponse dynamicResponse){
+        logger.info("Response Script processing started");
+
         Script script = resourcesService.getResponseScript(dynamicResponse.getId());
         if(script != null){
-            GroovyScriptHandler.executeResponseScript(script.getText(), resourceRequest.response());
+            logger.info("Found script: " + script);
+            scriptHandler.executeResponseScript(script.getText(), resourceRequest.response());
         }
     }
 
     private void processResponseScript(DynamicResponse dynamicResponse, Map<String, String> params){
+        logger.info("Response Script processing started, with params: " + params);
+
         Script script = resourcesService.getResponseScript(dynamicResponse.getId());
         if(script != null){
-            GroovyScriptHandler.executeResponseScript(script.getText(), params, resourceRequest.response());
+            logger.info("Found script: " + script);
+            scriptHandler.executeResponseScript(script.getText(), params, resourceRequest.response());
         }
     }
 

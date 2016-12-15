@@ -1,4 +1,4 @@
-package org.qamock.Date;
+package org.qamock.date;
 
 import java.util.Date;
 

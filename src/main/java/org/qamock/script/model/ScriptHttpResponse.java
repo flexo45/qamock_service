@@ -32,9 +32,7 @@ public class ScriptHttpResponse implements Serializable {
 
 
     private int code;
-
     private Map<String, String> headers;
-
     private String content;
 
 }

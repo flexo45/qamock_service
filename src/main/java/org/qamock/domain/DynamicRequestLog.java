@@ -1,6 +1,6 @@
 package org.qamock.domain;
 
-import org.qamock.Date.LocalTime;
+import org.qamock.date.LocalTime;
 
 import javax.persistence.*;
 import java.io.Serializable;

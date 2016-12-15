@@ -1,8 +1,11 @@
 package org.qamock.script.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
 import org.qamock.script.exception.ScriptExecutionException;
 import org.qamock.script.exception.ScriptExtractionException;
+import org.qamock.script.handler.ScriptSuiteProcessor;
 import org.qamock.script.helper.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,14 @@ public class HttpRequestScript implements ScriptStep, Serializable {
 
     private static final long serialVersionUID = 7423567925694923655L;
 
+    private ScriptHttpResponse response;
+    private ScriptSuiteProcessor scriptSuiteProcessor;
+    private String method;
+    private String url;
+    private String body;
+    private Map<String, String> headers;
+    private List<HttpExtractor> extractors;
+
     public HttpRequestScript(String method, String url){
         this.method = method;
         this.url = url;
@@ -42,7 +53,7 @@ public class HttpRequestScript implements ScriptStep, Serializable {
 
     public Map<String, String> getHeaders(){return headers;}
 
-    public void addExtractor(int target, String value, String to){
+    public void addExtractor(String target, String value, String to){
         extractors.add(new HttpExtractor(target, value , to));
     }
 
@@ -50,7 +61,7 @@ public class HttpRequestScript implements ScriptStep, Serializable {
 
     public void setHeaders(Map<String, String> v){headers = v;}
 
-    public void setScriptSuite(ScriptSuite v){scriptSuite = v;}
+    public void setScriptSuiteProcessor(ScriptSuiteProcessor v){scriptSuiteProcessor = v;}
 
     @Override
     public String getType() {
@@ -81,12 +92,12 @@ public class HttpRequestScript implements ScriptStep, Serializable {
 
     @Override
     public Map<String, String> getProperties() {
-        return scriptSuite.getProperties();
+        return scriptSuiteProcessor.getProperties();
     }
 
     protected void send() throws Exception{
 
-        HttpURLConnection connection = (HttpURLConnection) new URL(Helper.replaceAlias(url, this)).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(Helper.replaceAlias(url, this)).openConnection(); //TODO pool http connection
 
         if(headers != null){
             for(Map.Entry<String, String> it : headers.entrySet()){
@@ -140,81 +151,56 @@ public class HttpRequestScript implements ScriptStep, Serializable {
         logger.info("Response received: " + response.toString());
     }
 
-
-
-    private ScriptHttpResponse response;
-
-    private ScriptSuite scriptSuite;
-
-    private String method;
-
-    private String url;
-
-    private String body;
-
-    private Map<String, String> headers;
-
-    private List<HttpExtractor> extractors;
-
     private class HttpExtractor implements Serializable {
 
         private static final long serialVersionUID = 4237546275435764335L;
 
         private final Logger logger = LoggerFactory.getLogger(HttpExtractor.class);
 
-        public HttpExtractor(int target, String value, String to){
+        public HttpExtractor(String target, String value, String to){
             this.target = target;
             this.value = value;
             this.to = to;
         }
 
+        private String target;
+        private String value;
+        private String to;
+
         public void extract() throws Exception{
             String result = "";
             if(response != null){
-                switch (target){
-                    case 0:
-                        try {
-                            result = response.getHeaders().get(value);
-                        }
-                        catch (Exception e){
-                            logger.error("Extract header=" + value + " error: ", e);
-                        }
-                        break;
-                    case 1:
-                        try {
-                            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-                            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-                            Document document = builder.parse(response.getContent());
-                            XPath xPath = XPathFactory.newInstance().newXPath();
-                            result = xPath.compile(value).evaluate(document);
-                        }
-                        catch (XPathExpressionException xe){
-                            logger.error("Extract xml error: XPath navigation error:\r\n" + value, xe);
-                        }
-                        catch (Exception e){
-                            logger.error("Extract xml error:\r\n" + value, e);
-                        }
-                        break;
-                    case 2:
-                        /*JsonElement element = new JsonParser().parse(response.getContent()); //TODO
-                        if(element != null){
-                            result = element.getAsJsonObject().get(value).getAsString();
-                        }*/
-                        break;
+                if(target.equals("header")){
+                    try {
+                        result = response.getHeaders().get(value);
+                    }
+                    catch (Exception e){
+                        logger.error("Extract header=" + value + " error: ", e);
+                    }
+                }
+                else if(target.equals("xml")){
+                    try {
+                        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+                        Document document = builder.parse(response.getContent());
+                        XPath xPath = XPathFactory.newInstance().newXPath();
+                        result = xPath.compile(value).evaluate(document);
+                    }
+                    catch (XPathExpressionException xe){
+                        logger.error("Extract xml error: XPath navigation error:\r\n" + value, xe);
+                    }
+                    catch (Exception e){
+                        logger.error("Extract xml error:\r\n" + value, e);
+                    }
+                }
+                else if(target.equals("json")){
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode root = mapper.readTree(response.getContent());
+                    result = root.findValue(value).asText();
                 }
 
                 getProperties().put(to, result);
             }
         }
-
-
-
-        private int target; //*0=header;1=xml;2=json*/
-
-        private String value;
-
-        private String to;
-
     }
-
 }

@@ -44,6 +44,12 @@ public interface DynamicResourceDao {
 
     void updateScript(Script script);
 
+    void deleteResource(DynamicResource resource);
+
+    void deleteResponse(DynamicResponse response);
+
+    void deleteScript(Script script);
+
     void deleteResourceMethod(DynamicResourceMethod resourceMethod);
 
     void deleteResponseHeader(Header header);

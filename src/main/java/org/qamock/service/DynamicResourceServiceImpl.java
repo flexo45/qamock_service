@@ -13,6 +13,7 @@ import org.qamock.dynamic.DynamicResourceException;
 import org.qamock.dynamic.DynamicResourceRequestHandler;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
 
+import org.qamock.dynamic.script.ScriptHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +35,9 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
 
     @Autowired
     AsyncLogWriter asyncLogWriter;
+
+    @Autowired
+    ScriptHandler scriptHandler;
 
     @Override
     public void receiveDynamicResourceRequest(DynamicResourceRequest resourceRequest) throws DynamicResourceException{
@@ -52,14 +55,14 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
             if(isAcceptedRequest(methods, resourceRequest)){
 
                 DynamicResourceRequestHandler resourceRequestHandler =
-                        new DynamicResourceRequestHandler(resourceRequest, this);
+                        new DynamicResourceRequestHandler(resourceRequest, this, scriptHandler);
 
                 resourceRequestHandler.processResourceRequest(resource);
 
-                asyncLogWriter.loggingDynamicRequest(resourceRequest, resource);
-
-                logger.info("Complete!");
-
+                if(resource.getDisable_logging() != 1){
+                    asyncLogWriter.loggingDynamicRequest(resourceRequest, resource);
+                    logger.info("Complete!");
+                }
             }
             else {
                 resourceRequest.response().setStatus(405);
@@ -151,6 +154,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
                 requestPojo.setMethod(request.getMethod());
                 requestPojo.setPath(request.getPath());
                 requestPojo.setHeaders((Map<String, String>) new ObjectMapper().readValue(request.getHeaders(), new TypeReference<Map<String, String>>(){}));
+                requestPojo.setContent(request.getContent());
                 row.setRequest(requestPojo);
 
                 row.setResponse(resourceDao.getMockResponse(requestLog.getId()));
@@ -191,7 +195,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     @Transactional
     @Override
         public void addTest(){
-        DynamicResource dynamicResource = new DynamicResource("test", 0, null, null);
+        DynamicResource dynamicResource = new DynamicResource("test", 0, null, null, 0);
         resourceDao.addResource(dynamicResource);
         DynamicResourceMethod resourceMethod = new DynamicResourceMethod(dynamicResource, "POST");
         resourceDao.addResourceMethod(resourceMethod);
@@ -209,7 +213,8 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     @Override
     public void createResource(ResourceObject resourceObject) {
         logger.info("Receive create resource request: " + resourceObject);
-        DynamicResource resource = new DynamicResource(resourceObject.getPath(), resourceObject.getStrategy(), null, null);
+        DynamicResource resource = new DynamicResource(resourceObject.getPath(), resourceObject.getStrategy(), null, null,
+                resourceObject.getLogging() < 0 ? 0 : resourceObject.getLogging());
         resourceDao.addResource(resource);
 
         if(resourceObject.getScript() != null){
@@ -268,21 +273,20 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
         resource.setPath(resourceObject.getPath());
         resource.setDispatch_strategy(resourceObject.getStrategy());
         resource.setDefaultDynamicResponse(resourceDao.getResponse(resourceObject.getDefault_resp()));
+        resource.setDisable_logging(resourceObject.getLogging());
         resourceDao.updateResource(resource);
 
-        if(resourceObject.getScript() != null){
-            if(!resourceObject.getScript().equals("")){
-                //logger.debug("Found script for update: " + resourceObject.getScript());
-                Script script = resourceDao.resourceScript(resource.getId());
-                //logger.debug("Try get script from db: " + script);
-                if(script == null){
-                    script = new Script(resourceObject.getScript(), resource, null);
-                }
-                else {
-                    script.setText(resourceObject.getScript());
-                }
+        //scrip updater
+        Script script = resourceDao.resourceScript(resource.getId());
+        String script_text = resourceObject.getScript() == null ? "" : resourceObject.getScript();
+        if(script != null){
+            script.setText(script_text);
+            resourceDao.updateScript(script);
+        }
+        else {
+            if(!script_text.equals("")){
+                script = new Script(script_text, resource, null);
                 resourceDao.updateScript(script);
-                //logger.debug("success");
             }
         }
 
@@ -314,34 +318,39 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
         response.setName(responseObject.getName());
         resourceDao.updateResponse(response);
 
-        if(responseObject.getContent() != null){
-            if(!responseObject.getContent().equals("")){
-                Content content = resourceDao.responseContent(responseObject.getId());
-                if(content == null){
-                    content = new Content(responseObject.getContent(), response);
-                }
-                else {
-                    content.setText(responseObject.getContent());
-                }
+        //content updater
+        Content content = resourceDao.responseContent(responseObject.getId());
+        String content_text = responseObject.getContent() == null ? "" : responseObject.getContent();
+        if(content != null){
+            content.setText(content_text);
+            resourceDao.updateContent(content);
+        }
+        else {
+            if(!content_text.equals("")){
+                content = new Content(content_text, response);
                 resourceDao.updateContent(content);
             }
         }
 
-        if(responseObject.getScript() != null){
-            if(!responseObject.getContent().equals("")){
-                Script script = resourceDao.responseScript(responseObject.getId());
-                if(script == null){
-                    script = new Script(responseObject.getScript(), null, response);
-                }
-                else {
-                    script.setText(responseObject.getScript());
-                }
+        //scrip updater
+        Script script = resourceDao.responseScript(responseObject.getId());
+        String script_text = responseObject.getScript() == null ? "" : responseObject.getScript();
+        if(script != null){
+            script.setText(script_text);
+            resourceDao.updateScript(script);
+        }
+        else {
+            if(!script_text.equals("")){
+                script = new Script(script_text, null, response);
                 resourceDao.updateScript(script);
             }
         }
 
+        //headers updater
         List<Header> new_headers = new ArrayList<Header>();
-        for(String i : responseObject.getHeaders()){
+        List<String> headers_raw = responseObject.getHeaders() == null ? new ArrayList<String>() : responseObject.getHeaders();
+
+        for(String i : headers_raw){
             String[] arr = i.split(":");
             if(arr.length > 1){
                 new_headers.add(new Header(arr[0], arr[1], response));
@@ -380,40 +389,21 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     @Transactional
     @Override
     public void deleteResponse(long id) {
-        //TODO
+        logger.info("Receive delete response request: responseId=" + id);
+        DynamicResponse response = resourceDao.getResponse(id);
+        if(response != null){
+            resourceDao.deleteResponse(response);
+        }
     }
 
     @Transactional
     @Override
     public void deleteResource(long id) {
         logger.info("Receive delete resource request: resourceId=" + id);
-        //TODO
-    }
-
-    @Override
-    public void createSequence(String name, long startValue) {
-        resourceDao.addSequence(new Sequence(name, startValue));
-    }
-
-    @Override
-    public void deleteSequence(String name) {
-        resourceDao.deleteSequence(resourceDao.getSequence(name));
-    }
-
-    @Transactional
-    @Override
-    public long nextSequenceNumber(String name) {
-        Sequence sequence = resourceDao.getSequence(name);
-        long next = sequence.getValue() + 1;
-        sequence.setValue(next);
-        resourceDao.updateSequence(sequence);
-        return next;
-    }
-
-    @Transactional
-    @Override
-    public long currentSequenceNumber(String name) {
-        return resourceDao.getSequence(name).getValue();
+        DynamicResource resource = resourceDao.getResource(id);
+        if(resource != null){
+            resourceDao.deleteResource(resource);
+        }
     }
 
     private static boolean isAcceptedRequest(List<DynamicResourceMethod> methods, DynamicResourceRequest resourceRequest){

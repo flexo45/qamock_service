@@ -50,24 +50,31 @@ public class DynamicResource implements Serializable {
         this.defaultDynamicResponse = defaultDynamicResponse;
     }
 
+    @Column(name = "disable_logging")
+    private int disable_logging;
+    public int getDisable_logging(){return disable_logging;}
+    public void setDisable_logging(int disable_logging){this.disable_logging = disable_logging;}
+
     public DynamicResource(){}
 
     public DynamicResource(long id, String path, int dispatch_strategy, DynamicResponse lastDynamicResponse
-            , DynamicResponse defaultDynamicResponse){
+            , DynamicResponse defaultDynamicResponse, int disable_logging){
         this.setId(id);
         this.setPath(path);
         this.setDispatch_strategy(dispatch_strategy);
         this.setLastDynamicResponse(lastDynamicResponse);
         this.setDefaultDynamicResponse(defaultDynamicResponse);
+        this.setDisable_logging(disable_logging);
     }
 
     public DynamicResource(String path, int dispatch_strategy_id, DynamicResponse lastDynamicResponse
-            , DynamicResponse defaultDynamicResponse){
+            , DynamicResponse defaultDynamicResponse, int disable_logging){
         this.setId(-1);
         this.setPath(path);
         this.setDispatch_strategy(dispatch_strategy_id);
         this.setLastDynamicResponse(lastDynamicResponse);
         this.setDefaultDynamicResponse(defaultDynamicResponse);
+        this.setDisable_logging(disable_logging);
     }
 
     @Override

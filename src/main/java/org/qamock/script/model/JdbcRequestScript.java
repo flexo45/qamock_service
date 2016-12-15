@@ -1,10 +1,18 @@
 package org.qamock.script.model;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.qamock.dao.ConnectionDao;
+import org.qamock.jdbc.JDBCPoolFactory;
 import org.qamock.script.exception.ScriptExecutionException;
 import org.qamock.script.exception.ScriptExtractionException;
+import org.qamock.script.handler.ScriptSuiteProcessor;
 import org.qamock.script.helper.Helper;
+import org.qamock.service.ScriptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -22,19 +30,36 @@ public class JdbcRequestScript implements ScriptStep, Serializable {
 
     private static final long serialVersionUID = 4576495647435352835L;
 
-    public JdbcRequestScript(int type, String connectionString){
+    public JdbcRequestScript(String type, String connectionName){
         this.type = type;
-        this.connectionString = connectionString;
+        this.connectionName = connectionName;
         extractors = new ArrayList<JdbcSelectExtractor>();
     }
 
-    public void addExtractor(String param, String to){
-        extractors.add(new JdbcSelectExtractor(param, to));
+    @Autowired
+    JDBCPoolFactory jdbcPoolFactory;
+
+    @Autowired
+    ScriptService scriptService;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    private ScriptSuiteProcessor scriptSuiteProcessor;
+    private String query;
+    private List<String> params;
+    private String connectionName;
+    private String type;
+    private List<JdbcSelectExtractor> extractors;
+    private List<Map<String, Object>> result;
+
+    public void addExtractor(String target, String value, String to){
+        extractors.add(new JdbcSelectExtractor(target, value, to));
     }
 
-    public void setScriptSuite(ScriptSuite v){scriptSuite = v;}
+    public void setScriptSuiteProcessor(ScriptSuiteProcessor v){scriptSuiteProcessor = v;}
 
-    public void addSelectStatement(String query, String[] params){
+    public void addSelectStatement(String query, List<String> params){
         this.query = query;
         this.params = params;
     }
@@ -47,9 +72,14 @@ public class JdbcRequestScript implements ScriptStep, Serializable {
     @Override
     public void run() throws ScriptExecutionException {
         try {
-            switch (type){
-                case 0:
-                    select();
+            if(type.equals("select")){
+                select();
+            }
+            else if(type.equals("update")){
+
+            }
+            else if(type.equals("procedure")){
+
             }
         }
         catch (Exception e){
@@ -71,23 +101,36 @@ public class JdbcRequestScript implements ScriptStep, Serializable {
 
     @Override
     public Map<String, String> getProperties() {
-        return scriptSuite.getProperties();
+        return scriptSuiteProcessor.getProperties();
     }
 
-    public int getStatementType(){return type;}
+    public String getStatementType(){return type;}
 
 
-
+    //@Transactional(value = "jdbcTx")
     private void select() throws SQLException{
 
         Connection connection = null;
 
         Statement statement = null;
 
-        result = new ArrayList<Map<String, String>>();
+        result = new ArrayList<Map<String, Object>>();
 
         try {
-            //connection = JdbcConnectionPool.getInstance().getConnection(connectionString);
+
+            org.qamock.domain.Connection conn_metadata = scriptService.getConnection(connectionName);
+
+            if(conn_metadata == null){
+                throw new SQLException("Connection data not found");
+            }
+
+            BasicDataSource dataSource =  jdbcPoolFactory.getJdbcDataSource(conn_metadata);
+
+            jdbcTemplate.setDataSource(dataSource);
+
+            result = jdbcTemplate.queryForList(Helper.replaceAlias(query, this));
+
+            /*connection = jdbcPoolFactory.getJdbcDataSource(conn_metadata).getConnection();
 
             statement = connection.createStatement();
 
@@ -97,57 +140,44 @@ public class JdbcRequestScript implements ScriptStep, Serializable {
 
             while (resultSet.next()){
                 Map<String, String> row = new HashMap<String, String>();
-                for(int i = 0; i < params.length; i++){
-                    row.put(params[i], resultSet.getString(params[i]));
+                for(String s : params){
+                    row.put(s, resultSet.getString(s));
                     logger.info("data received: " + row);
                 }
                 result.add(row);
             }
 
             resultSet.close();
+            */
         }
         catch (SQLException e){
             logger.error(e.toString(), e);
         }
         finally {
-            if(statement != null){statement.close();}
-            if(connection != null){/*JdbcConnectionPool.getInstance().closeConnection(connection);*/} //TODO connection pool
+            logger.info("success statement");
+            //if(statement != null){statement.close();}
+            //if(connection != null){/*JdbcConnectionPool.getInstance().closeConnection(connection);*/} //TODO connection pool
         }
     }
-
-
-
-    private ScriptSuite scriptSuite;
-
-    private String query;
-
-    private String[] params;
-
-    private String connectionString;
-
-    private int type; //**0=select*/
-
-    private List<JdbcSelectExtractor> extractors;
-
-    private List<Map<String, String>> result;
 
     private class JdbcSelectExtractor implements Serializable{
 
         private static final long serialVersionUID = 4563423462345435835L;
 
-        public JdbcSelectExtractor(String param, String to){
-            this.param = param;
+        public JdbcSelectExtractor(String param, String value, String to){
+            this.target = param;
+            this.value = value;
             this.to = to;
         }
 
         public void extractFirst(){
-            getProperties().put(to, result.get(0).get(param));
+            if(target.equals("param")){
+                getProperties().put(to, result.get(0).get(value).toString());
+            }
         }
 
-
-
-        private String param;
-
+        private String target;
+        private String value;
         private String to;
 
     }

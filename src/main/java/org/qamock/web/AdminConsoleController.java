@@ -4,9 +4,11 @@ import org.dom4j.rule.Mode;
 import org.qamock.api.json.ApiResult;
 import org.qamock.api.json.ResourceObject;
 import org.qamock.api.json.ResponseObject;
+import org.qamock.dao.ScriptsDao;
 import org.qamock.domain.*;
 import org.qamock.service.AccountService;
 import org.qamock.service.DynamicResourcesService;
+import org.qamock.service.ScriptService;
 import org.qamock.web.mvc.DynamicResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,18 @@ public class AdminConsoleController {
     private static final Logger logger = LoggerFactory.getLogger(AdminConsoleController.class);
 
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
 
     @Autowired
-    private DynamicResourcesService resourcesService;
+    DynamicResourcesService resourcesService;
+
+    @Autowired
+    ScriptService scriptService;
+
+    @GetMapping(value = "/")
+    public String toIndexView(){
+        return indexView();
+    }
 
     @GetMapping(value = "/admin")
     public String indexView(){
@@ -39,6 +49,30 @@ public class AdminConsoleController {
     @GetMapping(value = "/admin/tools/jms")
     public String jmsView(){
         return "jms";
+    }
+
+    @GetMapping(value = "/admin/scripts")
+    public String scriptsView(Model model){
+        model.addAttribute("scriptList", scriptService.getSuiteList());
+        return "scripts";
+    }
+
+    @GetMapping(value = "/admin/scripts/create")
+    public String createScriptView(Model model){
+        model.addAttribute("script", new ScriptSuite());
+        return "script_create";
+    }
+
+    @GetMapping(value = "/admin/scripts/{id}")
+    public String scriptView(@PathVariable("id") long id, Model model){
+        model.addAttribute("script", scriptService.getSuite(id));
+        return "script_view";
+    }
+
+    @GetMapping(value = "/admin/scripts/{id}/edit")
+    public String editScriptView(@PathVariable("id") long id, Model model){
+        model.addAttribute("script", scriptService.getSuite(id));
+        return "script_edit";
     }
 
     @GetMapping(value = "/admin/dynamic")
@@ -63,6 +97,7 @@ public class AdminConsoleController {
         model.addAttribute("last_resp", resource.getLastDynamicResponse());
         model.addAttribute("responses", resourcesService.getResponseListOfResource(id));
         model.addAttribute("methods", resourcesService.getAcceptanceMethods(id));
+        model.addAttribute("logging", resource.getDisable_logging());
 
         Script script = resourcesService.getResourceScript(id);
         if(script != null){
@@ -94,6 +129,8 @@ public class AdminConsoleController {
         object.setStrategy(resource.getDispatch_strategy());
 
         object.setDefault_resp(resource.getDefaultDynamicResponse() == null ? 0 : resource.getDefaultDynamicResponse().getId());
+
+        object.setLogging(resource.getDisable_logging());
 
         Script script = resourcesService.getResourceScript(id);
         object.setScript(script == null ? null : script.getText());
@@ -165,12 +202,64 @@ public class AdminConsoleController {
         return "response_edit";
     }
 
+    @GetMapping(value = "admin/logs", params = {"resource_id", "size"})
+    public String logsView(@RequestParam("resource_id") long resource_id, @RequestParam("size") int size, Model model){
+        model.addAttribute("resources", resourcesService.getResourceList());
+        size = size <= 0 ? 10 : size;
+        String resource_name = null;
+        if(resource_id > 0){
+            DynamicResource resource = resourcesService.getResource(resource_id);
+            if(resource != null){
+                resource_name = resource.getPath();
+            }
+        }
+
+        model.addAttribute("logs", resourcesService.getResourceLog(size, resource_name));
+
+        return "logs";
+    }
+
+    @PostMapping(value = "/admin/scripts/add")
+    @ResponseBody
+    public ApiResult addScript(@ModelAttribute ScriptSuite scriptSuite){
+        scriptService.createSuite(scriptSuite);
+        return new ApiResult(0, "OK");
+    }
+
+    @PostMapping(value = "/admin/scripts/{id}/update")
+    @ResponseBody
+    public ApiResult updateScript(@PathVariable("id") long id, @ModelAttribute ScriptSuite scriptSuite){
+        scriptSuite.setId(id);
+        scriptService.updateSuite(scriptSuite);
+        return new ApiResult(0, "OK");
+    }
+
+    @PostMapping(value = "admin/dynamic/{id}/delete")
+    @ResponseBody
+    public ApiResult deleteResource(@PathVariable("id") long id){
+        ApiResult result = new ApiResult();
+        resourcesService.deleteResource(id);
+        result.setStatusCode(0);
+        result.setStatusText("OK");
+        return result;
+    }
+
     @PostMapping(value = "admin/dynamic/{id}/response/add")
     @ResponseBody
     public ApiResult addResponse(@PathVariable("id") long id, @ModelAttribute ResponseObject responseObject){
         ApiResult result = new ApiResult();
         responseObject.setResource_id(id);
         resourcesService.createResponse(responseObject);
+        result.setStatusCode(0);
+        result.setStatusText("OK");
+        return result;
+    }
+
+    @PostMapping(value = "admin/dynamic/{id}/response/{rsp_id}/delete")
+    @ResponseBody
+    public ApiResult deleteResponse(@PathVariable("id") long id, @PathVariable("rsp_id") long rsp_id){
+        ApiResult result = new ApiResult();
+        resourcesService.deleteResponse(rsp_id);
         result.setStatusCode(0);
         result.setStatusText("OK");
         return result;

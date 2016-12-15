@@ -5,10 +5,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
         <property name="dialect">org.hibernate.dialect.H2Dialect</property>
         <property name="connection.charSet">UTF-8</property>
-        <property name="hbm2ddl.auto">validate</property>
+        <property name="hbm2ddl.auto">update</property>
 
         <mapping class="org.qamock.domain.User" />
         <mapping class="org.qamock.domain.DynamicResource" />
@@ -21,5 +21,7 @@
         <mapping class="org.qamock.domain.MockRequest" />
         <mapping class="org.qamock.domain.DynamicRequestLog" />
         <mapping class="org.qamock.domain.Sequence" />
+        <mapping class="org.qamock.domain.ScriptSuite" />
+        <mapping class="org.qamock.domain.Connection" />
     </session-factory>
 </hibernate-configuration>

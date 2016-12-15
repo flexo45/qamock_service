@@ -1,22 +1,14 @@
 package org.qamock;
 
-import org.hibernate.SessionFactory;
-import org.qamock.dao.DynamicResourceDao;
-import org.qamock.domain.DynamicResource;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.XmlWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 
 @Configuration
+@EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 @SpringBootApplication
 public class WebApplication
 {

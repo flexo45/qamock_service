@@ -1,14 +1,23 @@
 package org.qamock.dao;
 
 import org.qamock.domain.Sequence;
-import org.qamock.script.model.ScriptSuite;
+import org.qamock.domain.ScriptSuite;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ScriptsDao {
 
-    Map<String, ScriptSuite> getSuites() throws Exception;
+    List<ScriptSuite> list();
 
-    ScriptSuite getSuite(String name) throws Exception;
+    ScriptSuite get(String name);
+
+    ScriptSuite get(long id);
+
+    void add(ScriptSuite scriptSuite);
+
+    void update(ScriptSuite scriptSuite);
+
+    void delete(ScriptSuite scriptSuite);
 
 }

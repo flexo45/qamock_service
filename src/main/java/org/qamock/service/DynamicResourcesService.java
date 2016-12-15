@@ -6,7 +6,6 @@ import org.qamock.api.json.ResponseObject;
 import org.qamock.domain.*;
 import org.qamock.dynamic.DynamicResourceException;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -51,13 +50,5 @@ public interface DynamicResourcesService {
     void deleteResponse(long id);
 
     void deleteResource(long id);
-
-    void createSequence(String name, long startValue);
-
-    void deleteSequence(String name);
-
-    long nextSequenceNumber(String name);
-
-    long currentSequenceNumber(String name);
 
 }

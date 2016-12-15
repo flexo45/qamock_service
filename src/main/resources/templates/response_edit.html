@@ -2,7 +2,9 @@
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
     <div>
-        <button th:onclick="'updateResponse(' + ${response.resource_id} + ',' + ${response.id} + ')'" th:text="#{button.save}">save</button>
+        <button th:text="#{button.back}" th:onclick="'openResponseView(' + ${response.resource_id} + ',' + ${response.id} + ')'"></button>
+        <button th:onclick="'updateResponse(' + ${response.resource_id} + ',' + ${response.id} + ')'" th:text="#{button.save}"></button>
+        <button th:onclick="'deleteResponse(' + ${response.resource_id} + ',' + ${response.id} + ')'" th:text="#{button.delete}"></button>
     </div>
 
     <form action="#" th:action="@{/admin}" id="update_response" th:object="${response}" method="post">

@@ -35,6 +35,8 @@ public class DynamicResourceController {
 
         try {
             dynamicResourceService.receiveDynamicResourceRequest(resourceRequest);
+
+            logger.info("Request processed successful");
         }
         catch (Exception e){
             throw new DynamicResourceException("Error occurred on receiving resource request", e);

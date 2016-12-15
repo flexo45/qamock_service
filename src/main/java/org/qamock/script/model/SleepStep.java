@@ -2,6 +2,7 @@ package org.qamock.script.model;
 
 import org.qamock.script.exception.ScriptExecutionException;
 import org.qamock.script.exception.ScriptExtractionException;
+import org.qamock.script.handler.ScriptSuiteProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,10 @@ public class SleepStep implements ScriptStep, Serializable {
 
     public SleepStep(long time){
         this.time = time;
+    }
+
+    public void setScriptSuiteProcessor(ScriptSuiteProcessor scriptSuiteProcessor){
+        this.scriptSuiteProcessor = scriptSuiteProcessor;
     }
 
     public void setScriptSuite(ScriptSuite v){scriptSuite = v;}
@@ -53,4 +58,6 @@ public class SleepStep implements ScriptStep, Serializable {
     private long time;
 
     private ScriptSuite scriptSuite;
+
+    private ScriptSuiteProcessor scriptSuiteProcessor;
 }

@@ -13,6 +13,7 @@ public class ResourceObject implements Serializable {
     private long default_resp;
     private List<String> methods;
     private String script;
+    private int logging;
 
     public long getId(){return id;}
     public void setId(long id){this.id = id;}
@@ -32,12 +33,17 @@ public class ResourceObject implements Serializable {
     public String getScript(){return script;}
     public void setScript(String script){this.script = script;}
 
+    public int getLogging(){return logging;}
+    public void setLogging(int logging){this.logging = logging;}
+
     @Override
     public String toString(){
         return "ResourceObject{path=" + path +
                 ", strategy=" + strategy +
                 ", default_resp=" + default_resp +
                 ", methods=" + methods +
-                ", script=" + script + "}";
+                ", script=" + script +
+                ", logging=" + logging +
+                "}";
     }
 }

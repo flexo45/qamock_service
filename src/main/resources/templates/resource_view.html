@@ -1,8 +1,8 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <div>
+        <button th:text="#{button.back}" th:onclick="'loadResourcesView()'"></button>
         <button th:text="#{button.edit}" th:onclick="'openResourceEdit(' + ${id} + ')'"></button>
-        <button th:text="#{button.delete}"></button>
         <button th:text="#{button.response.add}" th:onclick="'openAddResponse(' + ${id} + ')'"></button>
     </div>
     <div>
@@ -17,6 +17,12 @@
 
         <div>
             <span th:text="#{resource.url}"></span><span th:text="${path}"></span>
+        </div>
+
+        <div th:switch="${logging}">
+            <div th:case="'1'">
+                <span th:text="#{resource.label.logging.off}"></span>
+            </div>
         </div>
 
         <span class="sub_ttl" th:text="#{resource.strategy}"></span>
@@ -37,8 +43,10 @@
             </div>
             <div th:case="'2'">
                 <span th:text="#{resources.strategy.script}"></span>
-                <span th:text="#{resource.response.last}"></span>
-                <span th:text="${last_resp} != null ? ${last_resp.id} : #{resource.response.empty}"></span>
+                <div>
+                    <div th:text="#{resource.response.last}"></div>
+                    <span th:text="${last_resp} != null ? ${last_resp.id} : #{resource.response.empty}"></span>
+                </div>
                 <div>
                     <pre>
                         <code th:text="${script}"></code>
