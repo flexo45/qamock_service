@@ -242,7 +242,7 @@ public class DynamicResourceDaoImpl implements DynamicResourceDao {
                 .createCriteria(DynamicRequestLog.class)
                 .addOrder(Order.desc("id"))
                 .setMaxResults(size);
-        return criteria.add(Restrictions.eq("dynamicResponse", resource)).list();
+        return criteria.add(Restrictions.eq("dynamicResource", resource)).list();
     }
 
     @Override

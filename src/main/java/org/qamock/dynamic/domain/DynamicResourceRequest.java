@@ -19,7 +19,8 @@ public class DynamicResourceRequest implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceRequest.class);
 
-    public DynamicResourceRequest(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response){
+    public DynamicResourceRequest(HttpServletRequest request, HttpServletResponse response, String content){
+
         this.response = response;
 
         this.method = request.getMethod();
@@ -30,20 +31,22 @@ public class DynamicResourceRequest implements Serializable {
 
         this.headers = getHeadersMap(request);
 
-        if(this.method.equals("POST")){
-            try {
-                ServletInputStream inputStream = request.getInputStream();
-                if(inputStream != null) {
-                    this.content = getContent(inputStream);
-                }
-            }
-            catch (IOException ioe){
-                logger.warn("POST Content not found!", ioe);
-            }
-        }
-        else {
-            this.content = null;
-        }
+        this.content = content;
+    }
+
+    public DynamicResourceRequest(HttpServletRequest request, HttpServletResponse response){
+
+        this.response = response;
+
+        this.method = request.getMethod();
+
+        this.path = request.getRequestURI();
+
+        this.query = request.getQueryString();
+
+        this.headers = getHeadersMap(request);
+
+        this.content = null;
     }
 
     private String  method;
@@ -73,7 +76,7 @@ public class DynamicResourceRequest implements Serializable {
 
 
 
-    public static Map<String, String> getHeadersMap(@NotNull HttpServletRequest request){
+    public static Map<String, String> getHeadersMap(HttpServletRequest request){
 
         Map<String, String> result = new HashMap<String, String>();
 
@@ -86,7 +89,8 @@ public class DynamicResourceRequest implements Serializable {
         return result;
     }
 
-    public static String getContent(@NotNull InputStream inputStream) throws IOException{
+    @Deprecated
+    public static String getContent(InputStream inputStream) throws IOException{
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -94,7 +98,12 @@ public class DynamicResourceRequest implements Serializable {
 
         String line = null;
 
+        //logger.info("stream state=" + inputStream.available());
+
+        //logger.info("reader state: ready=" + bufferedReader.ready());
+
         while ((line = bufferedReader.readLine()) != null){
+            //logger.info("read content line=" + line);
             stringBuilder.append(line);
         }
 

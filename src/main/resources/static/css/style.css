@@ -20,6 +20,11 @@ button{
     border-radius: 8px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 }
+
+button:hover{
+    cursor: pointer;
+}
+
 select{
     border-radius: 8px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -154,6 +159,8 @@ select{
     left: 10px;
     right: 10px;
     bottom: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .view_b > div > div{
@@ -183,6 +190,7 @@ tr.t_row:nth-child(even){
 
 tr.t_row:hover{
     background: grey !important;
+    cursor: pointer;
 }
 
 .ttl{
@@ -254,4 +262,38 @@ input.cbx:checked ~ .tgl{
 
 .spn_btn:hover{
     font-weight: bold;
+}
+
+.lg_fltr{
+    float: right;
+    border: 1px solid;
+    padding: 5px;
+    background: white;
+}
+
+.lg_fltr_b{
+    margin: 20px 0px 0px 0px;
+}
+
+.lg_itm{
+    border: 1px solid;
+    padding: 5px;
+    margin: 5px;
+}
+
+.lg_ts{
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.lg_hdrs{
+    border: 1px solid;
+    margin: 5px;
+    padding: 5px;
+}
+
+.lg_cntnt{
+    border: 1px solid;
+    margin: 5px;
+    padding: 5px;
 }

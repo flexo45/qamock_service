@@ -1,0 +1,32 @@
+<suite>
+    <properties>
+        <property key="msisdn" value=""/>
+        <property key="req_id" value=""/>
+        <property key="url" value="" />
+    </properties>
+    <steps>
+        <step id="0" type="http">
+            <method>post</method>
+            <path>${url}</path>
+            <headers>
+                <header>
+                    <key>Content-Type</key>
+                    <val>text/xml</val>
+                </header>
+                <header>
+                    <key>X-Status-Code</key>
+                    <val>140</val>
+                </header>
+                <header>
+                    <key>X-Status-Text</key>
+                    <val>(BGF-084613) Big F@$*ing Error</val>
+                </header>
+                <header>
+                    <key>X-Find-Msisdns-Async-Id</key>
+                    <val>${req_id}</val>
+                </header>
+            </headers>
+            <content>%3C%3Fxml%20version%3D%271.0%27%3F%3E%3COfflineResponse%3E%3CLocations%3E%3CLocation%3E%3CMsisdn%3E555%3C%2FMsisdn%3E%3CLatitude%3E0.0%3C%2FLatitude%3E%3CLongitude%3E0.0%3C%2FLongitude%3E%3CRadius%3E0.0%3C%2FRadius%3E%3CTimestamp%3E%3C%2FTimestamp%3E%3CCellID%3E%3C%2FCellID%3E%3CLAC%3E%3C%2FLAC%3E%3CMCC%3E%3C%2FMCC%3E%3CMNC%3E%3C%2FMNC%3E%3C%2FLocation%3E%3C%2FLocations%3E%3CAddInfo%3ELBS-01204%09%D0%9E%D1%88%D0%B8%D0%B1%D0%BA%D0%B0%20%D0%B2%20%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8%20FRITZ%20(ZERO)%3C%2FAddInfo%3E%3C%2FOfflineResponse%3E</content>
+        </step>
+    </steps>
+</suite>

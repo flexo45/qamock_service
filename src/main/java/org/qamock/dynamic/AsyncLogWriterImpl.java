@@ -52,7 +52,8 @@ public class AsyncLogWriterImpl implements AsyncLogWriter {
 
             try {
                 mockRequest.setMethod(dynamicResourceRequest.method());
-                mockRequest.setPath(dynamicResourceRequest.path());
+                mockRequest.setPath(dynamicResourceRequest.path() +
+                        (dynamicResourceRequest.query() == null ? "" : "?" + dynamicResourceRequest.query()));
                 mockRequest.setContent(dynamicResourceRequest.content());
                 mockRequest.setHeaders(new ObjectMapper().writeValueAsString(dynamicResourceRequest.headers()));
             }

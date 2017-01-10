@@ -1,0 +1,33 @@
+<suite>
+    <properties>
+        <property key="guid" value=""/>
+        <property key="msisdn" value=""/>
+    </properties>
+    <steps>
+        <step id="0" type="http">
+            <method>get</method>
+            <path>http://192.168.38.15:8080/profilesync/gettoken</path>
+            <query>msisdn=${msisdn}%AND%service_name=qa_mock%AND%channel=SUBS_API_TEST</query>
+            <headers>
+                <header>
+                    <key>Authorization</key>
+                    <value>Basic cWFtb2NrOnFhbW9jaw==</value>
+                </header>
+            </headers>
+            <extractors>
+                <extract target-name="header" value="X-GUID" to="guid" />
+            </extractors>
+        </step>
+        <step id="1" type="http">
+            <method>get</method>
+            <path>http://192.168.38.15:8080/partnersgw/subscribe</path>
+            <query>msisdn=${msisdn}%AND%service_code=555555103%AND%guid=${guid}%AND%tnb_name=HARD</query>
+            <headers>
+                <header>
+                    <key>Authorization</key>
+                    <value>Basic cWFtb2NrOnFhbW9jaw==</value>
+                </header>
+            </headers>
+        </step>
+    </steps>
+</suite>

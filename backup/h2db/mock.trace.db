@@ -1,0 +1,132 @@
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "CONTENT" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "CONTENT" not found; SQL statement:
+alter table content drop constraint FK_1p30ertbrb1bijxijkacco02d if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_ieg2hbi4w24vx3rn6k44ypmnc if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_6h5pbrgphkgda19lt9s4mtmfr if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_tg5845pnbagc3hkpf5wyukew5 if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCE_METHODS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCE_METHODS" not found; SQL statement:
+alter table dynamic_resource_methods drop constraint FK_anyx26af84i8hf32ffw7by0iu if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_g3bio005m18uo3tsow27lem4a if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_trow6dsantcv3upbalnfob8gg if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESPONSES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESPONSES" not found; SQL statement:
+alter table dynamic_responses drop constraint FK_40uvjv5lheebk8ry4ig6mymt7 if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "HEADERS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "HEADERS" not found; SQL statement:
+alter table headers drop constraint FK_78kw2uegdx8nbuwrrodi7xnpy if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_tjdev4tvinf2v5c0mvo41kmhu if exists [42102-191]
+2016-11-14 19:26:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_2h2ji8ympl4dgkiwb2e61378g if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "CONTENT" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "CONTENT" not found; SQL statement:
+alter table content drop constraint FK_1p30ertbrb1bijxijkacco02d if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_ieg2hbi4w24vx3rn6k44ypmnc if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_6h5pbrgphkgda19lt9s4mtmfr if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_tg5845pnbagc3hkpf5wyukew5 if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCE_METHODS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCE_METHODS" not found; SQL statement:
+alter table dynamic_resource_methods drop constraint FK_anyx26af84i8hf32ffw7by0iu if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_g3bio005m18uo3tsow27lem4a if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_trow6dsantcv3upbalnfob8gg if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESPONSES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESPONSES" not found; SQL statement:
+alter table dynamic_responses drop constraint FK_40uvjv5lheebk8ry4ig6mymt7 if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "HEADERS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "HEADERS" not found; SQL statement:
+alter table headers drop constraint FK_78kw2uegdx8nbuwrrodi7xnpy if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_tjdev4tvinf2v5c0mvo41kmhu if exists [42102-191]
+2016-11-14 19:27:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_2h2ji8ympl4dgkiwb2e61378g if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "CONTENT" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "CONTENT" not found; SQL statement:
+alter table content drop constraint FK_1p30ertbrb1bijxijkacco02d if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_ieg2hbi4w24vx3rn6k44ypmnc if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_6h5pbrgphkgda19lt9s4mtmfr if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_REQUEST_LOG" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_REQUEST_LOG" not found; SQL statement:
+alter table dynamic_request_log drop constraint FK_tg5845pnbagc3hkpf5wyukew5 if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCE_METHODS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCE_METHODS" not found; SQL statement:
+alter table dynamic_resource_methods drop constraint FK_anyx26af84i8hf32ffw7by0iu if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_g3bio005m18uo3tsow27lem4a if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESOURCES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESOURCES" not found; SQL statement:
+alter table dynamic_resources drop constraint FK_trow6dsantcv3upbalnfob8gg if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "DYNAMIC_RESPONSES" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "DYNAMIC_RESPONSES" not found; SQL statement:
+alter table dynamic_responses drop constraint FK_40uvjv5lheebk8ry4ig6mymt7 if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "HEADERS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "HEADERS" not found; SQL statement:
+alter table headers drop constraint FK_78kw2uegdx8nbuwrrodi7xnpy if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_tjdev4tvinf2v5c0mvo41kmhu if exists [42102-191]
+2016-11-14 19:27:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð° "SCRIPTS" Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°
+Table "SCRIPTS" not found; SQL statement:
+alter table scripts drop constraint FK_2h2ji8ympl4dgkiwb2e61378g if exists [42102-191]
