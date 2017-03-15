@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
+    <link rel="stylesheet" href="/static/highlight/styles/default.css"/>
     <script src="/static/js/jquery-3.1.1.js"></script>
     <script src="/static/js/dyn.js"></script>
+    <script src="/static/highlight/highlight.pack.js"></script>
     <title th:text="#{admin.title}"></title>
 </head>
 <body>
@@ -23,7 +25,7 @@
             <div class="m_item" onmouseover="menuInHandler(this)" onmouseout="menuOutHandler(this)">
                 <span>Admin</span>
                 <div class="m_sub_list" hidden="hidden">
-                    <div>Users</div>
+                    <div onclick="loadAccounts()">Users</div>
                 </div>
             </div>
         </div>

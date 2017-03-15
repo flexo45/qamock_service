@@ -13,8 +13,17 @@ import java.util.Locale;
 public class WebConfig extends WebMvcConfigurerAdapter{
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
-            "classpath:/META-INF/resources/", "classpath:/resources/",
-            "classpath:/static/", "classpath:/public/" };
+            //"classpath:/META-INF/resources/",
+            //"classpath:/resources/",
+            "classpath:/static/"//,
+            //"classpath:/public/"
+    };
+
+    private static final String[] EXTERNAL_RESOURCE_LOCATIONS = {
+            "static/",
+            "/static/",
+            "file:static/"
+    };
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -22,14 +31,9 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/error403").setViewName("error403");
-    }
-
-    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+        //registry.addResourceHandler("/static/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+        registry.addResourceHandler("/static/**").addResourceLocations(EXTERNAL_RESOURCE_LOCATIONS);
     }
 
     @Bean

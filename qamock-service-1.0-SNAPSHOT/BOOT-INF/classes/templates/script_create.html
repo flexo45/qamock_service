@@ -1,0 +1,25 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <div>
+        <button onclick="createScript()" th:text="#{button.save}"></button>
+    </div>
+
+    <form action="#" th:action="@{/admin}" id="add_script" th:object="${script}" method="post">
+        <div class="ttl">
+            <span th:text="#{script.label.create.title}"></span>
+        </div>
+
+        <div>
+            <span th:text="#{script.label.name}"></span>
+            <input th:field="*{name}" type="text" name="name" id="name" />
+        </div>
+
+        <div>
+            <span th:text="#{script.label.script.text}"></span>
+            <div>
+                <textarea name="text" th:field="*{text}" id="text"></textarea>
+            </div>
+        </div>
+    </form>
+</div>

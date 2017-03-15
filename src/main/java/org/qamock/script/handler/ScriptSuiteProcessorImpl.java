@@ -49,6 +49,8 @@ public class ScriptSuiteProcessorImpl implements ScriptSuiteProcessor {
     @Override
     public void initiateScriptSuite(ScriptSuite scriptSuite) throws IOException, ScriptInitializationException{
 
+        this.stepList.clear(); //TODO KASTIL!!!
+
         this.name = scriptSuite.getName();
 
         Suite suite = (Suite) xmlProcessor.stringToObject(scriptSuite.getText());
@@ -74,8 +76,10 @@ public class ScriptSuiteProcessorImpl implements ScriptSuiteProcessor {
 
                 httpRequestScript.setHeaders(headers);
 
-                for(Extractor extractorJaxb : step.getExtractors()){
-                    httpRequestScript.addExtractor(extractorJaxb.getTargetName(), extractorJaxb.getValue(), extractorJaxb.getTo());
+                if(step.getExtractors() != null){
+                    for(Extractor extractorJaxb : step.getExtractors()){
+                        httpRequestScript.addExtractor(extractorJaxb.getTargetName(), extractorJaxb.getValue(), extractorJaxb.getTo());
+                    }
                 }
 
                 httpRequestScript.setScriptSuiteProcessor(this);

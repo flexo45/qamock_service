@@ -2,6 +2,8 @@ package org.qamock.config;
 
 import org.qamock.script.handler.ScriptSuiteProcessorImpl;
 import org.qamock.xml.XmlProcessorImpl;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -55,5 +57,7 @@ public class ServiceConfig {
         mailSender.setDefaultEncoding("UTF-8");
         return mailSender;
     }
+
+
 
 }

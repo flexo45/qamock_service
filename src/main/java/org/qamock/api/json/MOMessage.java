@@ -16,6 +16,8 @@ public class MOMessage implements Serializable {
     private String queue;
     private String server;
     private List<String> properties;
+    private long seq_num;
+    private String route;
 
     public long getMsisdn(){return msisdn;}
     public void setMsisdn(long msisdn){this.msisdn = msisdn;}
@@ -40,6 +42,12 @@ public class MOMessage implements Serializable {
 
     public String getServer(){return server;}
     public void setServer(String server){this.server = server;}
+
+    public long getSeq_num(){return seq_num;}
+    public void setSeq_num(long seq_num){this.seq_num = seq_num;}
+
+    public String getRoute(){return route;}
+    public void setRoute(String route){this.route = route;}
 
     public List<String> getProperties(){return properties;}
     public void setProperties(List<String> properties){this.properties = properties;}

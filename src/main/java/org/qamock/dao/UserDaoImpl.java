@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.qamock.domain.Role;
 import org.qamock.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,21 +25,41 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void addRole(Role role) {
+        sessionFactory.getCurrentSession().save(role);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<User> listUser() {
         return sessionFactory.getCurrentSession().createQuery("from User").list();
     }
 
     @Override
-    public User getUser(String login) {
+    @SuppressWarnings("unchecked")
+    public List<Role> listRole(long userId) {
+
+        User user = (User) sessionFactory.getCurrentSession().get(User.class, userId);
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Role.class);
+        return criteria.add(Restrictions.eq("username", user.getUsername())).list();
+    }
+
+    @Override
+    public User getUser(String username) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class);
-        return ((User) criteria.add(Restrictions.eq("login", login)).uniqueResult());
+        return ((User) criteria.add(Restrictions.eq("username", username)).uniqueResult());
+    }
+
+    @Override
+    public User getUser(long id) {
+        return (User) sessionFactory.getCurrentSession().get(User.class, id);
     }
 
     @Override
     public void setActive(User user, boolean isActive) {
 
-        user.setActive(isActive);
+        user.setEnabled(isActive);
         sessionFactory.getCurrentSession().saveOrUpdate(user);
 
         /*Query query = sessionFactory.getCurrentSession().createQuery("update User set active = :active where id = :id");

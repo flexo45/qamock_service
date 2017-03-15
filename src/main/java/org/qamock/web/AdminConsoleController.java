@@ -1,10 +1,8 @@
 package org.qamock.web;
 
-import org.dom4j.rule.Mode;
-import org.qamock.api.json.ApiResult;
 import org.qamock.api.json.ResourceObject;
 import org.qamock.api.json.ResponseObject;
-import org.qamock.dao.ScriptsDao;
+import org.qamock.api.json.UserObject;
 import org.qamock.domain.*;
 import org.qamock.service.AccountService;
 import org.qamock.service.DynamicResourcesService;
@@ -15,12 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AdminConsoleController {
@@ -36,13 +30,8 @@ public class AdminConsoleController {
     @Autowired
     ScriptService scriptService;
 
-    @GetMapping(value = "/")
-    public String toIndexView(){
-        return indexView();
-    }
-
     @GetMapping(value = "/admin")
-    public String indexView(){
+    public String adminView(){
         return "admin";
     }
 
@@ -85,7 +74,7 @@ public class AdminConsoleController {
         return "resources";
     }
 
-    @GetMapping(value = "admin/dynamic/{id}")
+    @GetMapping(value = "/admin/dynamic/{id}")
     public String resourceView(@PathVariable("id") long id, Model model){
         //logger.debug("Incoming id=" + id);
         DynamicResource resource = resourcesService.getResource(id);
@@ -107,13 +96,13 @@ public class AdminConsoleController {
         return "resource_view";
     }
 
-    @GetMapping(value = "admin/dynamic/create")
+    @GetMapping(value = "/admin/dynamic/create")
     public String createResourceView(Model model){
         model.addAttribute("resource", new ResourceObject());
         return "resource_create";
     }
 
-    @GetMapping(value = "admin/dynamic/{id}/edit")
+    @GetMapping(value = "/admin/dynamic/{id}/edit")
     public String editResourceView(@PathVariable("id") long id, Model model){
         DynamicResource resource = resourcesService.getResource(id);
         ResourceObject object = new ResourceObject();
@@ -142,7 +131,7 @@ public class AdminConsoleController {
         return "resource_edit";
     }
 
-    @GetMapping(value = "admin/dynamic/{id}/response/create")
+    @GetMapping(value = "/admin/dynamic/{id}/response/create")
     public String createResponseView(@PathVariable("id") long id, Model model){
         ResponseObject responseObject = new ResponseObject();
         responseObject.setResource_id(id);
@@ -150,7 +139,7 @@ public class AdminConsoleController {
         return "response_create";
     }
 
-    @GetMapping(value = "admin/dynamic/{id}/response/{rsp_id}")
+    @GetMapping(value = "/admin/dynamic/{id}/response/{rsp_id}")
     public String responseView(@PathVariable("id") long id, @PathVariable("rsp_id") long rsp_id, Model model){
         DynamicResponse dynamicResponse = resourcesService.getResponse(rsp_id);
         model.addAttribute("id", dynamicResponse.getId());
@@ -173,7 +162,7 @@ public class AdminConsoleController {
         return "response_view";
     }
 
-    @GetMapping(value = "admin/dynamic/{id}/response/{rsp_id}/edit")
+    @GetMapping(value = "/admin/dynamic/{id}/response/{rsp_id}/edit")
     public String editResponseView(@PathVariable("id") long id, @PathVariable("rsp_id") long rsp_id, Model model){
         DynamicResponse dynamicResponse = resourcesService.getResponse(rsp_id);
         ResponseObject object = new ResponseObject();
@@ -202,7 +191,7 @@ public class AdminConsoleController {
         return "response_edit";
     }
 
-    @GetMapping(value = "admin/logs", params = {"resource_id", "size"})
+    @GetMapping(value = "/admin/logs", params = {"resource_id", "size"})
     public String logsView(@RequestParam("resource_id") long resource_id, @RequestParam("size") int size, Model model){
         model.addAttribute("resources", resourcesService.getResourceList());
         size = size <= 0 ? 10 : size;
@@ -219,110 +208,37 @@ public class AdminConsoleController {
         return "logs";
     }
 
-    @PostMapping(value = "/admin/scripts/add")
-    @ResponseBody
-    public ApiResult addScript(@ModelAttribute ScriptSuite scriptSuite){
-        scriptService.createSuite(scriptSuite);
-        return new ApiResult(0, "OK");
-    }
-
-    @PostMapping(value = "/admin/scripts/{id}/update")
-    @ResponseBody
-    public ApiResult updateScript(@PathVariable("id") long id, @ModelAttribute ScriptSuite scriptSuite){
-        scriptSuite.setId(id);
-        scriptService.updateSuite(scriptSuite);
-        return new ApiResult(0, "OK");
-    }
-
-    @PostMapping(value = "admin/dynamic/{id}/delete")
-    @ResponseBody
-    public ApiResult deleteResource(@PathVariable("id") long id){
-        ApiResult result = new ApiResult();
-        resourcesService.deleteResource(id);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @PostMapping(value = "admin/dynamic/{id}/response/add")
-    @ResponseBody
-    public ApiResult addResponse(@PathVariable("id") long id, @ModelAttribute ResponseObject responseObject){
-        ApiResult result = new ApiResult();
-        responseObject.setResource_id(id);
-        resourcesService.createResponse(responseObject);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @PostMapping(value = "admin/dynamic/{id}/response/{rsp_id}/delete")
-    @ResponseBody
-    public ApiResult deleteResponse(@PathVariable("id") long id, @PathVariable("rsp_id") long rsp_id){
-        ApiResult result = new ApiResult();
-        resourcesService.deleteResponse(rsp_id);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @PostMapping(value = "admin/dynamic/{id}/response/{rsp_id}/update")
-    @ResponseBody
-    public ApiResult updateResponse(@PathVariable("id") long id, @PathVariable("rsp_id") long rsp_id, @ModelAttribute ResponseObject responseObject){
-        ApiResult result = new ApiResult();
-        responseObject.setId(rsp_id);
-        responseObject.setResource_id(id);
-        resourcesService.updateResponse(responseObject);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @PostMapping(value = "admin/dynamic/{id}/update")
-    @ResponseBody
-    public ApiResult updateResource(@PathVariable("id") long id, @ModelAttribute ResourceObject resourceObject){
-        ApiResult result = new ApiResult();
-        resourceObject.setId(id);
-        resourcesService.updateResource(resourceObject);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @PostMapping(value = "admin/dynamic/add")
-    @ResponseBody
-    public ApiResult addResource(@ModelAttribute ResourceObject resourceObject){
-        ApiResult result = new ApiResult();
-        resourcesService.createResource(resourceObject);
-        result.setStatusCode(0);
-        result.setStatusText("OK");
-        return result;
-    }
-
-    @RequestMapping(value = "/admin/accounts", method = RequestMethod.GET)
-    public String accountsList(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("userList", accountService.listAccount());
-
-        return "account";
-    }
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String test(){
-        File file = new File("TEST.CALLBACK");
-        try {
-            file.createNewFile();
+    @GetMapping(value = "/admin/accounts")
+    public String accountsView(Model model)
+    {
+        List<Map<Object, Object>> accounts = new ArrayList<Map<Object, Object>>();
+        for(User user : accountService.listAccount()){
+            Map<Object, Object> account = new HashMap<Object, Object>();
+            account.put("account", user);
+            account.put("roles", accountService.listRoles(user.getId()));
+            accounts.add(account);
         }
-        catch (IOException e){}
-
-
-        return "redirect:/admin";
+        model.addAttribute("accounts", accounts);
+        return "accounts";
     }
 
-    @RequestMapping(value = "/admin/accounts/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, BindingResult result){
-        accountService.addAccount(user);
-
-        return "redirect:/admin/accounts";
+    @GetMapping(value = "/admin/accounts/{id}")
+    public String accountView(@PathVariable("id") long id, Model model){
+        model.addAttribute("user", accountService.getAccount(id));
+        model.addAttribute("roles", accountService.listRoles(id));
+        return "account_view";
     }
 
+    @GetMapping(value = "/admin/accounts/{id}/edit")
+    public String editAccountView(@PathVariable("id") long id, Model model){
+        User user = accountService.getAccount(id);
+        UserObject object = new UserObject();
+        object.setUsername(user.getUsername());
+        object.setPassword(user.getPassword());
+        object.setEmail(user.getEmail());
+        object.setEnabled(user.getEnabled());
+        object.setRoles(accountService.listRoles(id));
+        model.addAttribute("user", object);
+        return "account_edit";
+    }
 }

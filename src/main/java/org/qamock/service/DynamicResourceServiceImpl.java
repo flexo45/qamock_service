@@ -17,6 +17,8 @@ import org.qamock.dynamic.script.ScriptHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -76,18 +78,21 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     }
 
     @Transactional
+    @Cacheable("resource")
     @Override
     public DynamicResource getResource(String path){
         return resourceDao.getResource(path);
     }
 
     @Transactional
+    @Cacheable("resource")
     @Override
     public DynamicResource getResource(long id) {
         return resourceDao.getResource(id);
     }
 
     @Transactional
+    @Cacheable("response")
     @Override
     public DynamicResponse getResponse(long id) {
         return  resourceDao.getResponse(id);
@@ -266,6 +271,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     }
 
     @Transactional
+    @CacheEvict(value = "resource", allEntries = true)
     @Override
     public void updateResource(ResourceObject resourceObject) {
         logger.info("Receive update resource request: " + resourceObject);
@@ -310,6 +316,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     }
 
     @Transactional
+    @CacheEvict(value = "response", allEntries = true)
     @Override
     public void updateResponse(ResponseObject responseObject) {
         logger.info("Receive update response request: " + responseObject);
@@ -387,6 +394,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     }
 
     @Transactional
+    @CacheEvict(value = "response", allEntries = true)
     @Override
     public void deleteResponse(long id) {
         logger.info("Receive delete response request: responseId=" + id);
@@ -397,6 +405,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     }
 
     @Transactional
+    @CacheEvict(value = "resource", allEntries = true)
     @Override
     public void deleteResource(long id) {
         logger.info("Receive delete resource request: resourceId=" + id);

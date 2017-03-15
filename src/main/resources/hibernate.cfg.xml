@@ -23,5 +23,6 @@
         <mapping class="org.qamock.domain.Sequence" />
         <mapping class="org.qamock.domain.ScriptSuite" />
         <mapping class="org.qamock.domain.Connection" />
+        <mapping class="org.qamock.domain.Role" />
     </session-factory>
 </hibernate-configuration>

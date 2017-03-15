@@ -20,13 +20,13 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "login", unique = true, updatable = false)
-    private String login;
-    public String getLogin() {
-        return login;
+    @Column(name = "username", unique = true, updatable = false)
+    private String username;
+    public String getUsername() {
+        return username;
     }
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Column(name = "password", nullable = false)
@@ -44,36 +44,36 @@ public class User implements Serializable {
     public String getRole() { return  this.role; }
     public void setRole(String role) { this.role = role; }
 
-    @Column(name = "active", nullable = false)
-    private boolean active;
-    public boolean getActive(){return this.active;}
-    public void setActive(boolean active){this.active = active;}
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+    public boolean getEnabled(){return this.enabled;}
+    public void setEnabled(boolean enabled){this.enabled = enabled;}
 
     public User() {
     }
 
-    public User(long id, String login, String password, String email, String role, boolean active) {
+    public User(long id, String username, String password, String email, String role, boolean enabled) {
         this.setId(id);
-        this.setLogin(login);
+        this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
         this.setRole(role);
-        this.setActive(active);
+        this.setEnabled(enabled);
     }
 
-    public User(String login, String password, String email, String role, boolean active) {
+    public User(String username, String password, String email, String role, boolean enabled) {
         this.setId(-1);
-        this.setLogin(login);
+        this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
         this.setRole(role);
-        this.setActive(active);
+        this.setEnabled(enabled);
     }
 
     @Override
     public String toString() {
         return "User{" + "id=" + id +
-                ", login=" + login +
+                ", login=" + username +
                 ", role=" + role +
                 "}";
     }

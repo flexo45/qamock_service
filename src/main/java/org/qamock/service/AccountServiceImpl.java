@@ -1,6 +1,8 @@
 package org.qamock.service;
 
+import org.qamock.api.json.UserObject;
 import org.qamock.dao.UserDao;
+import org.qamock.domain.Role;
 import org.qamock.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,27 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private UserDao userDao;
 
+    @Deprecated
     @Transactional
     @Override
     public void addAccount(User user) {
         userDao.addUser(user);
+    }
+
+    @Deprecated
+    @Transactional
+    @Override
+    public void addRole(Role role) {
+        userDao.addRole(role);
+    }
+
+    @Transactional
+    @Override
+    public void addAccount(UserObject userObject) {
+        userDao.addUser(new User(userObject.getUsername(), userObject.getPassword(), userObject.getEmail(), "", userObject.getEnabled()));
+        for(Role role : userObject.getRoles()){
+            userDao.addRole(role);
+        }
     }
 
     @Transactional
@@ -28,9 +47,19 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public User getAccount(String login) {
-        return userDao.getUser(login);
+    public List<Role> listRoles(long userId) {
+        return userDao.listRole(userId);
     }
+
+    @Transactional
+    @Override
+    public User getAccount(String username) {
+        return userDao.getUser(username);
+    }
+
+    @Transactional
+    @Override
+    public User getAccount(long id) { return userDao.getUser(id); }
 
     @Transactional
     @Override

@@ -120,7 +120,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.temafon:tema-common:1.0">
         <CLASSES>
-          <root url="jar://$USER_HOME$/maven_system_lib/common-1.0.jar!/" />
+          <root url="jar://$USER_HOME$/maven_system_lib/sdp-common-1.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
