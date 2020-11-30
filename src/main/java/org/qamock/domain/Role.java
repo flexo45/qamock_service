@@ -37,13 +37,13 @@ public class Role implements Serializable {
     public Role() {
     }
 
-    public Role(long id, String username, String password, String email, String role, boolean enabled) {
+    public Role(long id, String username, String role) {
         this.setId(id);
         this.setUsername(username);
         this.setRole(role);
     }
 
-    public Role(String username, String password, String email, String role, boolean enabled) {
+    public Role(String username, String role) {
         this.setId(-1);
         this.setUsername(username);
         this.setRole(role);

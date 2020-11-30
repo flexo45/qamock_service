@@ -5,13 +5,14 @@ import org.qamock.api.json.ResourceObject;
 import org.qamock.api.json.ResponseObject;
 import org.qamock.api.json.UserObject;
 import org.qamock.domain.ScriptSuite;
-import org.qamock.domain.User;
 import org.qamock.service.AccountService;
 import org.qamock.service.DynamicResourcesService;
 import org.qamock.service.ScriptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

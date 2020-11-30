@@ -2,15 +2,14 @@ package org.qamock.dynamic.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
+import org.springframework.boot.json.GsonJsonParser;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DynamicResourceRequest implements Serializable {
@@ -57,21 +56,25 @@ public class DynamicResourceRequest implements Serializable {
     private HttpServletResponse response;
     private String responseContent;
 
-    public String method(){return this.method;}
+    public String method() {return this.method;}
 
-    public String path(){return this.path;}
+    public String path() {return this.path;}
 
-    public String query(){return this.query;}
+    public String query() {return this.query;}
 
-    public Map<String, String> headers(){return this.headers;}
+    public Map<String, String> headers() {return this.headers;}
 
-    public String content(){return this.content;}
+    public String content() {return this.content;}
 
-    public HttpServletResponse response(){return this.response;}
+    public Map<String, Object> jobject() { return new GsonJsonParser().parseMap(this.content); }
 
-    public String getResponseContent(){return this.responseContent;}
+    public List<Object> jarray() { return new GsonJsonParser().parseList(this.content); }
 
-    public void setResponseContent(String responseContent){this.responseContent = responseContent;}
+    public HttpServletResponse response() {return this.response;}
+
+    public String getResponseContent() {return this.responseContent;}
+
+    public void setResponseContent(String responseContent) {this.responseContent = responseContent;}
 
 
 

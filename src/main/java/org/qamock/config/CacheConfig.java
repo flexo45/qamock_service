@@ -9,16 +9,20 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
-@EnableCaching
 @Configuration
+@EnableCaching
 public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager(){
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Arrays.asList(
-           new ConcurrentMapCache("resource"),
-           new ConcurrentMapCache("response")
+                new ConcurrentMapCache("resource"),
+                new ConcurrentMapCache("response"),
+                new ConcurrentMapCache("jmstemplatemq"),
+                new ConcurrentMapCache("jmstemplateamqp"),
+                new ConcurrentMapCache("connfactorymq"),
+                new ConcurrentMapCache("connfactoryamqp")
         ));
         return cacheManager;
     }

@@ -1,0 +1,25 @@
+target/
+build/
+out/
+
+.gradle
+
+*.war
+*.ear
+*.class
+*.log
+
+# eclipse
+.settings/
+.project
+.metadata
+.classpath
+.externalToolBuilders
+
+# idea
+.idea/
+*.iml
+*.iws
+*.ipr
+
+logs/

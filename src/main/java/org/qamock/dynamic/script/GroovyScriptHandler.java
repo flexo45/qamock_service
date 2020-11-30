@@ -3,19 +3,12 @@ package org.qamock.dynamic.script;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
-import org.qamock.service.DynamicResourcesService;
-import org.qamock.service.ScriptService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GroovyScriptHandler implements ScriptHandler{
-
-    //private DynamicResourcesService resourcesService;
-
-    //private ScriptService scriptService;
 
     private ScriptUtils scriptUtils;
 

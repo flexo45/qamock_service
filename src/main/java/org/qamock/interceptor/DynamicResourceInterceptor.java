@@ -13,9 +13,6 @@ public class DynamicResourceInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceInterceptor.class);
 
-    @Autowired
-    AsyncLogWriter logWriter;
-
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception e) throws Exception{
         super.afterCompletion(request, response, handler, e);

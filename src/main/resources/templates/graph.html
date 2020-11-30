@@ -1,0 +1,122 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" th:src="${data_file}"></script>
+    <script type="text/javascript">
+
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+
+        function isChecked(param){
+            var d = document.getElementById('cb_' + param).checked;
+            if(d == true){return 2;}
+            else{return 0;}
+        }
+
+        function redraw(){
+            drawChart();
+        }
+
+        function drawChart() {
+
+            var chartDiv = document.getElementById('chart_div');
+
+            var data = google.visualization.arrayToDataTable(getData());
+
+            var options =
+            {
+                title: 'Leads',
+                hAxis:
+                {
+                    showTextEvery: 1,
+                    gridlines:
+                    {
+                        color: 'black'
+                    }
+                },
+                vAxes:
+                {
+                    0:
+                    {
+                   		gridlines:
+               		    {
+               		        color: 'black'
+               		    },
+                        format:"# / sec"
+                    },
+           		    1:
+           		    {
+                	    gridlines:
+                	    {
+                	        color: 'black'
+                	    },
+                        format:"# ms"
+                    },
+                    2:
+                    {
+                    	gridlines:
+                    	{
+                    	    color: 'transparent'
+                    	},
+                        format:"# VU",
+                        textPosition: "in"
+                    }
+                },
+                series: {
+                    0:
+                    {
+                        targetAxisIndex: 0,
+                        lineWidth: isChecked('tps'),
+                        pointSize: isChecked('tps')
+                    },
+                    1:
+                    {
+                        targetAxisIndex: 1,
+                        lineWidth: isChecked('avg'),
+                        pointSize: isChecked('avg')
+                    },
+                    2:
+                    {
+                        targetAxisIndex: 1,
+                        lineWidth: isChecked('95line'),
+                        pointSize: isChecked('95line')
+                    },
+                    3:
+                    {
+                        targetAxisIndex: 2,
+                        lineWidth: isChecked('vu'),
+                        pointSize: isChecked('vu')
+                    }
+                },
+                colors: ["green", "yellow", "blue", "orange"],
+                chartArea:
+                {
+                    left:100,
+                    top:80,
+                    right:100,
+                    bottom: 50,
+                    width:1920,
+                    height:720
+                },
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_id'));
+            chart.draw(data, options);
+        }
+
+    </script>
+</head>
+
+<body>
+<div id="chart_id" style="height: 60%;"></div>
+<div>Transaction Per Seconds <input type="checkbox" id="cb_tps" checked="checked"/></div>
+<div>Virtual Users <input type="checkbox" id="cb_vu" checked="checked"/></div>
+<div>Average response time <input type="checkbox" id="cb_avg" checked="checked"/></div>
+<div>95% line <input type="checkbox" id="cb_95line" /></div>
+<div>90% line <input type="checkbox" id="cb_90line" /></div>
+<button onclick="redraw()">Reload</button>
+</body>
+</html>

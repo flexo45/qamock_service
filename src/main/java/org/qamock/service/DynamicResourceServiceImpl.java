@@ -20,7 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,7 +82,33 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     @Cacheable("resource")
     @Override
     public DynamicResource getResource(String path){
-        return resourceDao.getResource(path);
+        DynamicResource resource = resourceDao.getResource(path);
+        if (resource != null) return resource;
+
+        List<DynamicResource> suitableResources = resourceDao.getAllResourcesStartWith(path);
+        if (suitableResources.size() == 1) { resource = suitableResources.get(0); }
+        
+        if (suitableResources.size() > 1) {
+            String[] pathArrayByDirs = path.split("/");
+            for (DynamicResource possibleResource: suitableResources) {
+                boolean isHit = false;
+                String[] pathArrayByDirsOfPossibleResource = possibleResource.getPath().split("/");
+                if (pathArrayByDirsOfPossibleResource.length == pathArrayByDirs.length) {
+                    for (int i = 0; i < pathArrayByDirs.length; i++) {
+                        if (pathArrayByDirsOfPossibleResource[i].equals("*")) {
+                            isHit = true;
+                        } else {
+                            if (!pathArrayByDirsOfPossibleResource[i].equals(pathArrayByDirs[i])) {
+                                isHit = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (isHit) { resource = possibleResource; }
+                }
+            }
+        }
+        return resource;
     }
 
     @Transactional

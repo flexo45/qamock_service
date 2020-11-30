@@ -10,4 +10,8 @@ public interface JmsService {
 
     void sendObjectMessage(String address, String destination, Serializable object, Map<String, String> properties) throws JMSException;
 
+    void sendJmsMessageSerialized(String address, String destination, String object, Map<String, String> properties) throws JMSException;
+
+    void sendJmsMessage(String address, String destination, Object object, Map<String, String> properties) throws JMSException;
+
 }

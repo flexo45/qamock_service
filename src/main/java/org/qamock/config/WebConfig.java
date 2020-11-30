@@ -1,23 +1,24 @@
 package org.qamock.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
 import java.util.Locale;
 
 @Configuration
-//@ImportResource("classpath:root-context.xml")
 @EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter{
+public class WebConfig implements WebMvcConfigurer {
 
-    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+    /*private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             //"classpath:/META-INF/resources/",
             //"classpath:/resources/",
             "classpath:/static/"//,
             //"classpath:/public/"
-    };
+    };*/
 
     private static final String[] EXTERNAL_RESOURCE_LOCATIONS = {
             "static/",
@@ -38,17 +39,15 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("language");
+        final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
         return localeChangeInterceptor;
     }
 
     @Bean
     public SessionLocaleResolver localeResolver() {
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        Locale defaultLocale = new Locale("en");
-        localeResolver.setDefaultLocale(defaultLocale);
+        final SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.US);
         return localeResolver;
     }
-
 }

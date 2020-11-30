@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface DynamicResourceDao {
 
+    List<DynamicResource> getAllResourcesStartWith(String path);
+
     DynamicResource getResource(String path);
 
     DynamicResource getResource(long id);

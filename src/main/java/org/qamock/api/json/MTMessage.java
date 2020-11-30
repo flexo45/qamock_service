@@ -13,6 +13,7 @@ public class MTMessage implements Serializable {
     private String short_number;
     private String queue;
     private String server;
+    private int source_port;
     private List<String> properties;
 
     public long getMsisdn(){return msisdn;}
@@ -35,5 +36,8 @@ public class MTMessage implements Serializable {
 
     public List<String> getProperties(){return properties;}
     public void setProperties(List<String> properties){this.properties = properties;}
+
+    public int getSource_port(){return source_port;}
+    public void setSource_port(int source_port){this.source_port = source_port;}
 
 }

@@ -5,9 +5,10 @@ import org.qamock.dao.UserDao;
 import org.qamock.domain.Role;
 import org.qamock.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -15,6 +16,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Deprecated
     @Transactional
@@ -33,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public void addAccount(UserObject userObject) {
-        userDao.addUser(new User(userObject.getUsername(), userObject.getPassword(), userObject.getEmail(), "", userObject.getEnabled()));
+        userDao.addUser(new User(userObject.getUsername(), passwordEncoder.encode(userObject.getPassword()), userObject.getEmail(), userObject.getEnabled()));
         for(Role role : userObject.getRoles()){
             userDao.addRole(role);
         }
