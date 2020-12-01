@@ -18,7 +18,7 @@ public class CsrfSecurityRequestMatcher implements RequestMatcher {
             return false;
         }
 
-        if(httpServletRequest.getRequestURI().contains("/dynamic/resource/")){
+        if(httpServletRequest.getRequestURI().contains("/mock/")){
             return false;
         }
 

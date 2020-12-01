@@ -4,4 +4,3 @@
 
 rootProject.name = "qamock-service"
 rootProject.buildFileName = "build.gradle.kts"
-include("jms")

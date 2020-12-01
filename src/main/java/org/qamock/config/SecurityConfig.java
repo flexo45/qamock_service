@@ -2,6 +2,7 @@ package org.qamock.config;
 
 import org.qamock.api.json.UserObject;
 import org.qamock.domain.Role;
+import org.qamock.domain.User;
 import org.qamock.security.CsrfSecurityRequestMatcher;
 import org.qamock.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -36,17 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery("select username,password,enabled from users where username=?")
                 .authoritiesByUsernameQuery("select username,role from user_roles where username=?");
 
-        UserObject userObject = new UserObject();
-        userObject.setUsername("admin");
-        userObject.setPassword("1234");
-        userObject.setEmail("admin@mail");
-        userObject.setEnabled(true);
-
-        List<Role> roleList = new ArrayList<>();
-        roleList.add(new Role("admin", "ROLE_ADMIN"));
-        userObject.setRoles(roleList);
-
-//        accountService.addAccount(userObject);
+        prepopulateData();
     }
 
     @Override
@@ -82,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                                .mvcMatchers("/api/**").access("hasRole('ADMIN') and hasRole('API')")
                                 .mvcMatchers("/static/**").permitAll()
                                 .mvcMatchers("/h2/**").permitAll()
-                )
+                                .mvcMatchers("/mock/**").permitAll())
 
                 .headers()
                     .frameOptions().sameOrigin()
@@ -95,5 +85,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private void prepopulateData() {
+        User user = accountService.getAccount("admin");
+        if (user == null) {
+            UserObject userObject = new UserObject();
+            userObject.setUsername("admin");
+            userObject.setPassword("1234");
+            userObject.setEmail("admin@mail");
+            userObject.setEnabled(true);
+
+            List<Role> roleList = new ArrayList<>();
+            roleList.add(new Role("admin", "ROLE_ADMIN"));
+            userObject.setRoles(roleList);
+
+            accountService.addAccount(userObject);
+        }
     }
 }

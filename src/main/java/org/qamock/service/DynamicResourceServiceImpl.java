@@ -47,7 +47,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
 
         logger.info("Receive dynamic resource request: " + resourceRequest);
 
-        String resourcePath = resourceRequest.path().replace("/dynamic/resource/", "");
+        String resourcePath = resourceRequest.path().replace("/mock/", "");
 
         DynamicResource resource = getResource(resourcePath);
 
@@ -330,14 +330,11 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
             if(!new_list.contains(db_m.getMethod())){
                 resourceDao.deleteResourceMethod(db_m);
             }
-            else {
-                for(String m : new_list){
-                    boolean exist = false;
-                    for(DynamicResourceMethod i : db_list){
-                        if(m.equals(i.getMethod())){exist = true;}
-                    }
-                    if(!exist){resourceDao.addResourceMethod(new DynamicResourceMethod(resource, m));}
-                }
+        }
+
+        for (String new_method : new_list) {
+            if (db_list.stream().noneMatch(x -> x.getMethod().equals(new_method))) {
+                resourceDao.addResourceMethod(new DynamicResourceMethod(resource, new_method));
             }
         }
     }

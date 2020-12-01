@@ -1,6 +1,9 @@
 target/
 build/
 out/
+backup/
+static/
+mockservice/
 
 .gradle
 

@@ -1,5 +1,6 @@
 package org.qamock.config;
 
+import org.qamock.dao.DynamicResourceDao;
 import org.qamock.dynamic.script.GroovyScriptHandler;
 import org.qamock.dynamic.script.ScriptUtils;
 import org.qamock.dynamic.script.ScriptUtilsImpl;
@@ -9,6 +10,7 @@ import org.qamock.script.handler.ScriptSuiteProcessor;
 import org.qamock.script.handler.ScriptSuiteProcessorImpl;
 import org.qamock.xml.XmlProcessor;
 import org.qamock.xml.XmlProcessorImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -22,11 +24,14 @@ import java.util.HashMap;
 @Configuration
 public class MockConfig {
 
+    @Autowired
+    DynamicResourceDao resourceDao;
+
     @Bean
     public ScriptUtils scriptUtils() {
         final ScriptUtilsImpl scriptUtils = new ScriptUtilsImpl();
         scriptUtils.setScriptExecutorUtils(new ScriptExecutorUtilImpl());
-        scriptUtils.setSequenceUtil(new SequenceUtilImpl());
+        scriptUtils.setSequenceUtil(new SequenceUtilImpl(resourceDao));
         return scriptUtils;
     }
 

@@ -24,6 +24,7 @@
             <span th:text="#{response.headers.label}"></span>
             <div>
                 <span class="spn_btn" onclick="addHdr()">+</span>
+                <span class="spn_btn" onclick="addHdrWith('Content-Type','application/json; charset=utf-8')">CT</span>
                 <table>
                     <tbody id="hdr_tbl">
                     <tr>

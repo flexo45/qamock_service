@@ -13,8 +13,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//import javax.transaction.Transactional;
-
 @Service
 public class AsyncLogWriterImpl implements AsyncLogWriter {
 

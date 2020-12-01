@@ -71,8 +71,8 @@ public class DynamicResourceRequestHandler {
                     break;
                 case 1:
                     //RANDOM
-                    int rnd_idx = new Random().nextInt(allResponses.size() - 1);
-                    nextResponse = allResponses.get(rnd_idx);
+                    int rnd_idx = new Random().nextInt(allResponses.size());
+                    nextResponse = allResponses.get(rnd_idx == 0 ? 0 : rnd_idx - 1);
                     break;
                 case 2:
                     //SCRIPT

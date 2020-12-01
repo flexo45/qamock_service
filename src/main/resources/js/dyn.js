@@ -372,6 +372,11 @@ function addHdr(){
 
 }
 
+function addHdrWith(key, value){
+    var row = "<tr><td><input type=\"text\" name=\"headers\" id=\"headers\" value=\"" + key + ":" + value + "\"><span class=\"spn_btn\" onclick=\"delHdr(this)\">-</span></td></tr>";
+    $("#hdr_tbl").append(row);
+}
+
 function delHdr(object){
     $(object).parent().parent().remove();
 }

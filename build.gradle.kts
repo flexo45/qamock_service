@@ -1,5 +1,3 @@
-import org.gradle.jvm.tasks.Jar
-
 plugins {
     java
     id("org.springframework.boot") version "2.3.4.RELEASE"
@@ -10,14 +8,11 @@ apply(plugin = "io.spring.dependency-management")
 group = "org.qamock.webapp"
 version = "1.0-SNAPSHOT"
 description = "qamock-service"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenLocal()
     mavenCentral()
-//    maven {
-//        url = uri("https://repo.maven.apache.org/maven2/")
-//    }
 }
 
 val springBootVersion by extra("2.3.4.RELEASE")
@@ -50,8 +45,11 @@ dependencies {
     implementation("javax.inject:javax.inject:1")
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("org.glassfish.mq:imq:5.1")
+    implementation("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     implementation("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
     implementation("org.hibernate:hibernate-core:${hibernateVersion}")
     implementation("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
     implementation("org.apache.commons:commons-dbcp2:2.0")
@@ -61,28 +59,14 @@ dependencies {
     implementation("org.slf4j:slf4j-api:${sl4jVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     implementation("org.springframework.roo:org.springframework.roo.annotations:1.3.2.RELEASE")
-
-    implementation(project("jms"))
 }
 
 configurations {
     configurations {
         all {
-//            exclude(module = "spring-boot-starter-logging")
             exclude(module = "logback-classic")
         }
     }
-}
-
-val fatJar = task("fatJar", type = Jar::class) {
-    baseName = "${project.name}-fat"
-    manifest {
-        attributes["Implementation-Title"] = "Gradle Jar File Example"
-        attributes["Implementation-Version"] = archiveVersion
-        attributes["Main-Class"] = "org.qamock.WebApplication"
-    }
-    from(configurations.runtimeClasspath.get().map({ if (it.isDirectory) it else zipTree(it) }))
-    with(tasks.jar.get() as CopySpec)
 }
 
 tasks.withType<JavaCompile>() {
