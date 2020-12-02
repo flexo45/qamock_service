@@ -1,6 +1,10 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+
 plugins {
     java
     id("org.springframework.boot") version "2.3.4.RELEASE"
+    kotlin("jvm") version "1.4.20"
 }
 
 apply(plugin = "io.spring.dependency-management")
@@ -59,6 +63,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:${sl4jVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     implementation("org.springframework.roo:org.springframework.roo.annotations:1.3.2.RELEASE")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 configurations {
@@ -71,4 +76,12 @@ configurations {
 
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }

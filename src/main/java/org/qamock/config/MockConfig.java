@@ -1,7 +1,11 @@
 package org.qamock.config;
 
 import org.qamock.dao.DynamicResourceDao;
+import org.qamock.dynamic.DynamicResourceRequestHandler;
+import org.qamock.dynamic.DynamicResourceRequestHandlerImpl;
+import org.qamock.dynamic.context.TtlHashMap;
 import org.qamock.dynamic.script.GroovyScriptHandler;
+import org.qamock.dynamic.script.ScriptHandler;
 import org.qamock.dynamic.script.ScriptUtils;
 import org.qamock.dynamic.script.ScriptUtilsImpl;
 import org.qamock.script.ScriptExecutorUtilImpl;
@@ -20,6 +24,8 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class MockConfig {
@@ -33,13 +39,6 @@ public class MockConfig {
         scriptUtils.setScriptExecutorUtils(new ScriptExecutorUtilImpl());
         scriptUtils.setSequenceUtil(new SequenceUtilImpl(resourceDao));
         return scriptUtils;
-    }
-
-    @Bean
-    public GroovyScriptHandler scriptHandler() {
-        final GroovyScriptHandler scriptHandler = new GroovyScriptHandler();
-        scriptHandler.setScriptUtils(scriptUtils());
-        return scriptHandler;
     }
 
     @Bean

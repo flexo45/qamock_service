@@ -2,9 +2,8 @@ target/
 build/
 out/
 backup/
-static/
 mockservice/
-
+1
 .gradle
 
 *.war

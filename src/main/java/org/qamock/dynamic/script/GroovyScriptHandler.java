@@ -2,23 +2,25 @@ package org.qamock.dynamic.script;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import org.qamock.dynamic.context.ContextUtils;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroovyScriptHandler implements ScriptHandler{
+@Component
+public class GroovyScriptHandler implements ScriptHandler {
 
-    private ScriptUtils scriptUtils;
-
-    @Override
-    public void setScriptUtils(ScriptUtils scriptUtils){
+    public GroovyScriptHandler(ScriptUtils scriptUtils,
+                               ContextUtils contextUtils) {
         this.scriptUtils = scriptUtils;
+        this.contextUtils = contextUtils;
     }
 
-    @Override
-    public ScriptUtils getScriptUtils(){return this.scriptUtils;}
+    private final ScriptUtils scriptUtils;
+    private final ContextUtils contextUtils;
 
     @Override
     public Map<String, Object> executeDispatchScript(String script, Map<String, String> params, DynamicResourceRequest request) throws RuntimeException{
@@ -27,6 +29,7 @@ public class GroovyScriptHandler implements ScriptHandler{
         binding.setVariable("request", request);
         binding.setVariable("params", params);
         binding.setVariable("utils", scriptUtils);
+        binding.setVariable("context", contextUtils);
         GroovyShell groovyShell = new GroovyShell(binding);
         result.put("response", groovyShell.evaluate(script));
         result.put("params", params);

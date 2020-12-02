@@ -2,6 +2,7 @@ package org.qamock.script;
 
 import org.qamock.dao.ScriptsDao;
 import org.qamock.domain.ScriptSuite;
+import org.qamock.dynamic.context.TestContextService;
 import org.qamock.script.exception.ScriptInitializationException;
 import org.qamock.script.handler.ScriptSuiteProcessor;
 import org.slf4j.Logger;
@@ -70,20 +71,4 @@ public class ScriptExecutorUtilImpl {
             logger.error("Unknown error",ioe);
         }
     }
-
-    /*
-    @Deprecated
-    private class RunScriptTask implements Runnable{
-
-        ScriptSuite scriptSuite;
-
-        public RunScriptTask(ScriptSuite scriptSuite){
-            this.scriptSuite = scriptSuite;
-        }
-
-        @Override
-        public void run() {
-
-        }
-    }*/
 }

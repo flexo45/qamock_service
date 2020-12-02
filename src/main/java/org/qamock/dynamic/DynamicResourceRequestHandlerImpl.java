@@ -1,47 +1,49 @@
 package org.qamock.dynamic;
 
+import org.jetbrains.annotations.NotNull;
 import org.qamock.domain.*;
+import org.qamock.dynamic.context.ContextProcessor;
+import org.qamock.dynamic.context.TestContextService;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
-import org.qamock.dynamic.script.GroovyScriptHandler;
 import org.qamock.dynamic.script.ScriptHandler;
 import org.qamock.service.DynamicResourcesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class DynamicResourceRequestHandler {
+@Component
+public class DynamicResourceRequestHandlerImpl implements DynamicResourceRequestHandler{
 
-    private static final Logger logger = LoggerFactory.getLogger(DynamicResourceRequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(DynamicResourceRequestHandlerImpl.class);
 
-    public DynamicResourceRequestHandler(@NotNull DynamicResourceRequest resourceRequest,
-                                         @NotNull DynamicResourcesService resourcesService,
-                                         @NotNull ScriptHandler scriptHandler){
+    public DynamicResourceRequestHandlerImpl(ScriptHandler scriptHandler,
+                                             ContextProcessor contextProcessor) {
         this.scriptHandler = scriptHandler;
-        this.resourceRequest = resourceRequest;
+        this.contextProcessor = contextProcessor;
+    }
+
+    private final ScriptHandler scriptHandler;
+    private final ContextProcessor contextProcessor;
+    private DynamicResourcesService resourcesService;
+
+    public void setDynamicResourcesService(DynamicResourcesService resourcesService) {
         this.resourcesService = resourcesService;
     }
 
-    private ScriptHandler scriptHandler;
+    public void processResourceRequest(@NotNull DynamicResource resource,
+                                       @NotNull DynamicResourceRequest resourceRequest) throws DynamicResourceException {
 
-    private DynamicResourcesService resourcesService;
-
-    private DynamicResourceRequest resourceRequest;
-
-    public void processResourceRequest(DynamicResource resource) throws DynamicResourceException{
 
         DynamicResponse nextResponse = new DynamicResponse("default", 200, resource);
 
         List<DynamicResponse> allResponses = resourcesService.getResponseListOfResource(resource.getId());
-
-        //logger.debug("allResponses=" + allResponses);
 
         Map<String, String> params = new HashMap<String, String>();
 
@@ -119,20 +121,22 @@ public class DynamicResourceRequestHandler {
             }
 
             if(params.size() > 0){
-                processResponse(nextResponse, params);
+                processResponse(nextResponse, resourceRequest, params);
             }
             else {
-                processResponse(nextResponse);
+                processResponse(nextResponse, resourceRequest);
             }
 
         }
         else {
             logger.warn("No responses found for resource: " + resource + ", user default response{status=200}");
-            processResponse(nextResponse);
+            processResponse(nextResponse, resourceRequest);
         }
     }
 
-    private void processResponse(DynamicResponse dynamicResponse, Map<String, String> params) throws DynamicResourceException{
+    private void processResponse(DynamicResponse dynamicResponse,
+                                 DynamicResourceRequest resourceRequest,
+                                 Map<String, String> params) throws DynamicResourceException{
 
         logger.info("Response processing started: " + dynamicResponse + ", with params: " + params);
 
@@ -140,14 +144,14 @@ public class DynamicResourceRequestHandler {
         response.setStatus(dynamicResponse.getCode());
 
         for(Header header : resourcesService.getHeadersOfResponse(dynamicResponse.getId())){
-            response.addHeader(header.getName(), replaceParams(header.getValue(), params));
+            response.addHeader(header.getName(), resolveParamsExpressions(header.getValue(), params));
         }
 
         Content content = resourcesService.getContentOfResponse(dynamicResponse.getId());
 
         if(content != null){
             try {
-                String contentString = replaceParams(content.getText(), params);
+                String contentString = resolveParamsExpressions(content.getText(), params);
                 resourceRequest.setResponseContent(contentString);
                 response.getWriter().print(contentString);
             }
@@ -156,13 +160,14 @@ public class DynamicResourceRequestHandler {
             }
         }
 
-        processResponseScript(dynamicResponse, params);
+        processResponseScript(dynamicResponse, resourceRequest, params);
 
         logger.info("Complete process response: " + response);
 
     }
 
-    private void processResponse(DynamicResponse dynamicResponse) throws DynamicResourceException{
+    private void processResponse(DynamicResponse dynamicResponse,
+                                 DynamicResourceRequest resourceRequest) throws DynamicResourceException{
 
         logger.info("Response processing started: " + dynamicResponse);
 
@@ -198,13 +203,14 @@ public class DynamicResourceRequestHandler {
             }
         }
 
-        processResponseScript(dynamicResponse);
+        processResponseScript(dynamicResponse, resourceRequest);
 
         logger.info("Complete process response: " + response);
 
     }
 
-    private void processResponseScript(DynamicResponse dynamicResponse){
+    private void processResponseScript(DynamicResponse dynamicResponse,
+                                       DynamicResourceRequest resourceRequest){
         logger.info("Response Script processing started");
 
         Script script = resourcesService.getResponseScript(dynamicResponse.getId());
@@ -214,7 +220,9 @@ public class DynamicResourceRequestHandler {
         }
     }
 
-    private void processResponseScript(DynamicResponse dynamicResponse, Map<String, String> params){
+    private void processResponseScript(DynamicResponse dynamicResponse,
+                                       DynamicResourceRequest resourceRequest,
+                                       Map<String, String> params){
         logger.info("Response Script processing started, with params: " + params);
 
         Script script = resourcesService.getResponseScript(dynamicResponse.getId());
@@ -224,12 +232,20 @@ public class DynamicResourceRequestHandler {
         }
     }
 
+    private String resolveParamsExpressions(String target, Map<String, String> params) {
+        return replaceParams(replaceContextParams(target, params), params);
+    }
+
     private String replaceParams(String target, Map<String, String> params){
         String result = target;
         for(Map.Entry<String, String> param : params.entrySet()){
             result = result.replace("${#params#" + param.getKey() +"}", param.getValue());
         }
         return result;
+    }
+
+    private String replaceContextParams(String target, Map<String, String> params){
+        return contextProcessor.process(target, params);
     }
 
 }

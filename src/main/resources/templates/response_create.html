@@ -39,6 +39,12 @@
 
         <div>
             <label th:text="#{response.content.label}" for="content"></label>
+            <div class="hint">
+                <div>You can use expressions: ${#params#key} from params in dispatch script</div>
+                <div>${#context#equals(stringKey)#key}, where stringKey - some key of context, key - in params of context</div>
+                <div>${#context#contains(phrase)#key}, phrase - find context by phrase contained in key</div>
+                <div>${#context#equals(params.key)#key}, params.key - value from params in dispatch script</div>
+            </div>
             <div>
                 <textarea th:field="*{content}" id="content" name="content"></textarea>
             </div>
@@ -46,6 +52,10 @@
 
         <div>
             <label th:text="#{response.script.label}" for="script"></label>
+            <div class="hint">
+                <div>You can use objects: response, params, utils</div>
+                <div>response has methods of interface HttpServletResponse</div>
+            </div>
             <div>
                 <textarea th:field="*{script}" id="script" name="script"></textarea>
             </div>

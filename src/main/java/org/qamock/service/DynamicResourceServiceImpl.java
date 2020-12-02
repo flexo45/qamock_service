@@ -11,6 +11,7 @@ import org.qamock.domain.*;
 import org.qamock.dynamic.AsyncLogWriter;
 import org.qamock.dynamic.DynamicResourceException;
 import org.qamock.dynamic.DynamicResourceRequestHandler;
+import org.qamock.dynamic.DynamicResourceRequestHandlerImpl;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
 
 import org.qamock.dynamic.script.ScriptHandler;
@@ -29,18 +30,23 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DynamicResourceServiceImpl implements DynamicResourcesService{
+public class DynamicResourceServiceImpl implements DynamicResourcesService {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceServiceImpl.class);
 
-    @Autowired
-    DynamicResourceDao resourceDao;
+    public DynamicResourceServiceImpl(DynamicResourceDao resourceDao,
+                                      AsyncLogWriter asyncLogWriter,
+                                      DynamicResourceRequestHandler resourceRequestHandler) {
+        this.resourceDao = resourceDao;
+        this.asyncLogWriter = asyncLogWriter;
+        this.resourceRequestHandler = resourceRequestHandler;
+        ((DynamicResourceRequestHandlerImpl)this.resourceRequestHandler).setDynamicResourcesService(this);
+    }
 
-    @Autowired
-    AsyncLogWriter asyncLogWriter;
+    private final DynamicResourceDao resourceDao;
+    private final AsyncLogWriter asyncLogWriter;
+    private final DynamicResourceRequestHandler resourceRequestHandler;
 
-    @Autowired
-    ScriptHandler scriptHandler;
 
     @Override
     public void receiveDynamicResourceRequest(DynamicResourceRequest resourceRequest) throws DynamicResourceException{
@@ -57,10 +63,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
 
             if(isAcceptedRequest(methods, resourceRequest)){
 
-                DynamicResourceRequestHandler resourceRequestHandler =
-                        new DynamicResourceRequestHandler(resourceRequest, this, scriptHandler);
-
-                resourceRequestHandler.processResourceRequest(resource);
+                resourceRequestHandler.processResourceRequest(resource, resourceRequest);
 
                 if(resource.getDisable_logging() != 1){
                     asyncLogWriter.loggingDynamicRequest(resourceRequest, resource);

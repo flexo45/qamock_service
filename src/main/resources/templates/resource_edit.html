@@ -82,8 +82,8 @@
                     <label th:text="#{resources.strategy.script}" for="s2" class="str"></label>
                     <div hidden="hidden">
                         <span th:text="#{resource.create.script}"></span>
-                        <div>
-                            <div>You can use objects: request, params, utils</div>
+                        <div class="hint">
+                            <div>You can use objects: request, params, utils, context</div>
                             <div>request has method(), path(), query(), headers(), content(), jobject(), jarray()</div>
                         </div>
                         <div>
