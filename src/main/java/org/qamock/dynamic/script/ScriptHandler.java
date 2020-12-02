@@ -8,10 +8,6 @@ import java.util.Map;
 
 public interface ScriptHandler {
 
-    void setScriptUtils(ScriptUtils scriptUtils);
-
-    ScriptUtils getScriptUtils();
-
     Map<String, Object> executeDispatchScript(String script, Map<String, String> params, DynamicResourceRequest request) throws RuntimeException;
 
     void executeResponseScript(String script, HttpServletResponse response) throws RuntimeException;

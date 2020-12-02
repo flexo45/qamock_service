@@ -1,6 +1,5 @@
 package org.qamock.jdbc;
 
-import oracle.jdbc.OracleDriver;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.qamock.dao.ConnectionDao;
 import org.qamock.domain.Connection;
@@ -60,10 +59,10 @@ public class JDBCPoolFactoryImpl implements JDBCPoolFactory {
 
         switch (connection.getType()){
             case 0:
-                jdbcDataSource.setDriver(new OracleDriver());
+//                jdbcDataSource.setDriver(new OracleDriver());
                 break;
             default:
-                jdbcDataSource.setDriver(new OracleDriver());
+//                jdbcDataSource.setDriver(new OracleDriver());
                 break;
         }
         jdbcDataSource.setUrl(connection.getUrl());

@@ -11,6 +11,7 @@ import org.qamock.domain.*;
 import org.qamock.dynamic.AsyncLogWriter;
 import org.qamock.dynamic.DynamicResourceException;
 import org.qamock.dynamic.DynamicResourceRequestHandler;
+import org.qamock.dynamic.DynamicResourceRequestHandlerImpl;
 import org.qamock.dynamic.domain.DynamicResourceRequest;
 
 import org.qamock.dynamic.script.ScriptHandler;
@@ -20,7 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,25 +30,30 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DynamicResourceServiceImpl implements DynamicResourcesService{
+public class DynamicResourceServiceImpl implements DynamicResourcesService {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceServiceImpl.class);
 
-    @Autowired
-    DynamicResourceDao resourceDao;
+    public DynamicResourceServiceImpl(DynamicResourceDao resourceDao,
+                                      AsyncLogWriter asyncLogWriter,
+                                      DynamicResourceRequestHandler resourceRequestHandler) {
+        this.resourceDao = resourceDao;
+        this.asyncLogWriter = asyncLogWriter;
+        this.resourceRequestHandler = resourceRequestHandler;
+        ((DynamicResourceRequestHandlerImpl)this.resourceRequestHandler).setDynamicResourcesService(this);
+    }
 
-    @Autowired
-    AsyncLogWriter asyncLogWriter;
+    private final DynamicResourceDao resourceDao;
+    private final AsyncLogWriter asyncLogWriter;
+    private final DynamicResourceRequestHandler resourceRequestHandler;
 
-    @Autowired
-    ScriptHandler scriptHandler;
 
     @Override
     public void receiveDynamicResourceRequest(DynamicResourceRequest resourceRequest) throws DynamicResourceException{
 
         logger.info("Receive dynamic resource request: " + resourceRequest);
 
-        String resourcePath = resourceRequest.path().replace("/dynamic/resource/", "");
+        String resourcePath = resourceRequest.path().replace("/mock/", "");
 
         DynamicResource resource = getResource(resourcePath);
 
@@ -56,10 +63,7 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
 
             if(isAcceptedRequest(methods, resourceRequest)){
 
-                DynamicResourceRequestHandler resourceRequestHandler =
-                        new DynamicResourceRequestHandler(resourceRequest, this, scriptHandler);
-
-                resourceRequestHandler.processResourceRequest(resource);
+                resourceRequestHandler.processResourceRequest(resource, resourceRequest);
 
                 if(resource.getDisable_logging() != 1){
                     asyncLogWriter.loggingDynamicRequest(resourceRequest, resource);
@@ -81,7 +85,33 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
     @Cacheable("resource")
     @Override
     public DynamicResource getResource(String path){
-        return resourceDao.getResource(path);
+        DynamicResource resource = resourceDao.getResource(path);
+        if (resource != null) return resource;
+
+        List<DynamicResource> suitableResources = resourceDao.getAllResourcesStartWith(path);
+        if (suitableResources.size() == 1) { resource = suitableResources.get(0); }
+        
+        if (suitableResources.size() > 1) {
+            String[] pathArrayByDirs = path.split("/");
+            for (DynamicResource possibleResource: suitableResources) {
+                boolean isHit = false;
+                String[] pathArrayByDirsOfPossibleResource = possibleResource.getPath().split("/");
+                if (pathArrayByDirsOfPossibleResource.length == pathArrayByDirs.length) {
+                    for (int i = 0; i < pathArrayByDirs.length; i++) {
+                        if (pathArrayByDirsOfPossibleResource[i].equals("*")) {
+                            isHit = true;
+                        } else {
+                            if (!pathArrayByDirsOfPossibleResource[i].equals(pathArrayByDirs[i])) {
+                                isHit = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (isHit) { resource = possibleResource; }
+                }
+            }
+        }
+        return resource;
     }
 
     @Transactional
@@ -303,14 +333,11 @@ public class DynamicResourceServiceImpl implements DynamicResourcesService{
             if(!new_list.contains(db_m.getMethod())){
                 resourceDao.deleteResourceMethod(db_m);
             }
-            else {
-                for(String m : new_list){
-                    boolean exist = false;
-                    for(DynamicResourceMethod i : db_list){
-                        if(m.equals(i.getMethod())){exist = true;}
-                    }
-                    if(!exist){resourceDao.addResourceMethod(new DynamicResourceMethod(resource, m));}
-                }
+        }
+
+        for (String new_method : new_list) {
+            if (db_list.stream().noneMatch(x -> x.getMethod().equals(new_method))) {
+                resourceDao.addResourceMethod(new DynamicResourceMethod(resource, new_method));
             }
         }
     }

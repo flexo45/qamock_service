@@ -1,8 +1,6 @@
 package org.qamock.web;
 
-import com.temafon.data.MORequest;
-import com.temafon.data.MTRequest;
-import com.temafon.data.MTResponse;
+import org.hibernate.annotations.Parameter;
 import org.qamock.api.json.*;
 import org.qamock.service.EmailService;
 import org.qamock.service.JmsService;
@@ -18,6 +16,7 @@ import javax.jms.JMSException;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +33,11 @@ public class ApiController {
 
     @Autowired
     XmlProcessor xmlProcessor;
+
+    @PostMapping(value = "/api/jms/object")
+    public ApiResult sendJmsObject(@ModelAttribute JmsMessage jmsMessage){
+        return new ApiResult();
+    }
 
     @PostMapping(value = "/api/mail")
     @ResponseBody
@@ -104,144 +108,4 @@ public class ApiController {
 
         return result;
     }
-
-    @RequestMapping(value = "/api/jms/mt", method = RequestMethod.POST)
-    @ResponseBody
-    public ApiResult mtJmsHandler(@RequestBody MTMessage mtMessage){
-
-        ApiResult result = new ApiResult();
-
-        try {
-            if(mtMessage != null){
-
-                Map<String, String> jmsProp = new HashMap<String, String>();
-
-                if(mtMessage.getProperties() != null){
-                    for(String s : mtMessage.getProperties()){
-                        String[] p_arr = s.split(":");
-                        if(p_arr.length > 1){
-                            jmsProp.put(p_arr[0], p_arr[1]);
-                        }
-                        else {
-                            //TODO log fail parsing
-                        }
-                    }
-                }
-
-                MTRequest mtRequest = new MTRequest(mtMessage.getMsisdn(), mtMessage.getShort_number(), mtMessage.getMessage_text(), mtMessage.getService_name());
-
-
-                jmsService.sendObjectMessage(mtMessage.getServer(), mtMessage.getQueue(), mtRequest, jmsProp);
-
-                result.setStatusCode(0);
-                result.setStatusText("OK");
-            }
-        }
-        catch (JMSException jms_e){
-            result.setStatusCode(300);
-            result.setStatusText("JMS Exception - " + jms_e.getMessage());
-        }
-        catch (Exception e){
-            result.setStatusCode(500);
-            result.setStatusText("Unexpected Exception - " + e.toString() + " - " + e.getMessage());
-        }
-
-        return result;
-    }
-
-    @RequestMapping(value = "/api/jms/mt_resp", method = RequestMethod.POST)
-    @ResponseBody
-    public ApiResult mtRespJmsHandler(@RequestBody MTRespMessage mtRespMessage){
-
-        ApiResult result = new ApiResult();
-
-        try {
-            if(mtRespMessage != null){
-                Map<String, String> jmsProp = new HashMap<String, String>();
-
-                if(mtRespMessage.getProperties() != null){
-                    for(String s : mtRespMessage.getProperties()){
-                        String[] p_arr = s.split(":");
-                        if(p_arr.length > 1){
-                            jmsProp.put(p_arr[0], p_arr[1]);
-                        }
-                        else {
-                            //TODO log fail parsing
-                        }
-                    }
-                }
-
-                MTResponse mtResponse = new MTResponse(mtRespMessage.getMsisdn()
-                        , mtRespMessage.getShort_number()
-                        , mtRespMessage.getMessage_text()
-                        , mtRespMessage.getGuid()
-                        , mtRespMessage.getService_name());
-
-                mtResponse.setCpaStatus(mtRespMessage.getStatus());
-
-                if(mtRespMessage.getErr_text() != null){
-                    mtResponse.setCpaErrorText(mtRespMessage.getErr_text());
-                }
-
-                jmsService.sendObjectMessage(mtRespMessage.getServer(), mtRespMessage.getQueue(), mtResponse, jmsProp);
-
-                result.setStatusCode(0);
-                result.setStatusText("OK");
-            }
-        }
-        catch (JMSException jms_e){
-            result.setStatusCode(300);
-            result.setStatusText("JMS Exception - " + jms_e.getMessage());
-        }
-        catch (Exception e){
-            result.setStatusCode(500);
-            result.setStatusText("Unexpected Exception - " + e.toString() + " - " + e.getMessage());
-        }
-
-        return result;
-    }
-
-    @RequestMapping(value = "/api/jms/mo", method = RequestMethod.POST)
-    @ResponseBody
-    public ApiResult moJmsHandler(@RequestBody MOMessage moMessage){
-
-        ApiResult result = new ApiResult();
-
-        try {
-            if(moMessage != null){
-
-                Map<String, String> jmsProp = new HashMap<String, String>();
-
-                if(moMessage.getProperties() != null){
-                    for(String s : moMessage.getProperties()){
-                        String[] p_arr = s.split(":");
-                        if(p_arr.length > 1){
-                            jmsProp.put(p_arr[0], p_arr[1]);
-                        }
-                        else {
-                            //TODO log fail parsing
-                        }
-                    }
-                }
-
-                MORequest moRequest = new MORequest(moMessage.getMsisdn(), moMessage.getOrdering_channel(), moMessage.getMessage_text(), moMessage.getService_id());
-
-                jmsService.sendObjectMessage(moMessage.getServer(), moMessage.getQueue(), moRequest, jmsProp);
-
-                result.setStatusCode(0);
-                result.setStatusText("OK");
-            }
-        }
-        catch (JMSException jms_e){
-            result.setStatusCode(300);
-            result.setStatusText("JMS Exception - " + jms_e.getMessage());
-        }
-        catch (Exception e){
-            result.setStatusCode(500);
-            result.setStatusText("Unexpected Exception - " + e.toString() + " - " + e.getMessage());
-        }
-
-        return result;
-    }
-
 }

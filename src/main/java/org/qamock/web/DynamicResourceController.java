@@ -29,7 +29,8 @@ public class DynamicResourceController {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicResourceController.class);
 
-    @PostMapping(value = "/dynamic/resource/**")
+//    @PostMapping(value = "/dynamic/resource/**")
+    @PostMapping(value = "/mock/**")
     public void dispatchPayload(HttpServletRequest request,
                                 HttpServletResponse response,
                                 @RequestHeader(value = "Content-Type", defaultValue = "text/plain") String type,
@@ -66,7 +67,8 @@ public class DynamicResourceController {
 
     }
 
-    @RequestMapping(value = "/dynamic/resource/**")
+//    @RequestMapping(value = "/dynamic/resource/**")
+    @RequestMapping(value = "/mock/**")
     public void dispatch(HttpServletRequest request, HttpServletResponse response) throws DynamicResourceException{
 
         logger.info("Receive request: url=" + request.getRequestURI());

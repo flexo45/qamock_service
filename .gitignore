@@ -1,0 +1,27 @@
+target/
+build/
+out/
+backup/
+mockservice/
+1
+.gradle
+
+*.war
+*.ear
+*.class
+*.log
+
+# eclipse
+.settings/
+.project
+.metadata
+.classpath
+.externalToolBuilders
+
+# idea
+.idea/
+*.iml
+*.iws
+*.ipr
+
+logs/

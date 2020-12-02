@@ -39,11 +39,6 @@ public class User implements Serializable {
     public String getEmail() { return this.email; }
     public void setEmail(String email) { this.email = email; }
 
-    @Column(name = "role", nullable = false)
-    private String role;
-    public String getRole() { return  this.role; }
-    public void setRole(String role) { this.role = role; }
-
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
     public boolean getEnabled(){return this.enabled;}
@@ -52,21 +47,19 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long id, String username, String password, String email, String role, boolean enabled) {
+    public User(long id, String username, String password, String email, boolean enabled) {
         this.setId(id);
         this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
-        this.setRole(role);
         this.setEnabled(enabled);
     }
 
-    public User(String username, String password, String email, String role, boolean enabled) {
+    public User(String username, String password, String email, boolean enabled) {
         this.setId(-1);
         this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
-        this.setRole(role);
         this.setEnabled(enabled);
     }
 
@@ -74,7 +67,7 @@ public class User implements Serializable {
     public String toString() {
         return "User{" + "id=" + id +
                 ", login=" + username +
-                ", role=" + role +
+                ", role=" +
                 "}";
     }
 }

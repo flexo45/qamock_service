@@ -1,7 +1,6 @@
 package org.qamock.script.model;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.qamock.dao.ConnectionDao;
 import org.qamock.jdbc.JDBCPoolFactory;
 import org.qamock.script.exception.ScriptExecutionException;
 import org.qamock.script.exception.ScriptExtractionException;
@@ -12,15 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

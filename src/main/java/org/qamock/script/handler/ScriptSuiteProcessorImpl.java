@@ -1,6 +1,7 @@
 package org.qamock.script.handler;
 
 import org.qamock.domain.ScriptSuite;
+import org.qamock.dynamic.context.TestContextService;
 import org.qamock.script.exception.ScriptExecutionException;
 import org.qamock.script.exception.ScriptExtractionException;
 import org.qamock.script.exception.ScriptInitializationException;
@@ -12,6 +13,7 @@ import org.qamock.xml.XmlProcessor;
 import org.qamock.xml.object.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class ScriptSuiteProcessorImpl implements ScriptSuiteProcessor {
     private static final Logger logger = LoggerFactory.getLogger(ScriptSuiteProcessorImpl.class);
 
     private XmlProcessor xmlProcessor;
+    private TestContextService testContextService;
 
     //private Map<Integer, String> connectionMap;
     private String name;
