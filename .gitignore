@@ -3,7 +3,8 @@ build/
 out/
 backup/
 mockservice/
-1
+resources/
+
 .gradle
 
 *.war
@@ -20,6 +21,7 @@ mockservice/
 
 # idea
 .idea/
+.idea
 *.iml
 *.iws
 *.ipr

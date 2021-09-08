@@ -3,4 +3,7 @@
  */
 
 rootProject.name = "qamock-service"
-rootProject.buildFileName = "build.gradle.kts"
+include("tools:scripts")
+include("tools:bytedecoder")
+include("mock-scripts")
+include("app:main")

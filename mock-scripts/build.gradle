@@ -1,0 +1,20 @@
+plugins {
+    id 'groovy'
+}
+group 'org.qamock.mock.scripts'
+description 'mock-scripts-repository'
+version '0.1.2'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:2.4.6'
+    implementation project(':app:main')
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+configurations {
+    all*.exclude(group: 'xml-apis', module: 'xml-apis')
+}
