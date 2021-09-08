@@ -10,5 +10,6 @@ ADD build/libs/qamock-service-1.0-SNAPSHOT.jar .
 ADD build/libs/static ./static
 #copy DB
 ADD mockservice ./mockservice
+ADD resources ./resources
 
 CMD [ "java", "-jar", "qamock-service-1.0-SNAPSHOT.jar"]
