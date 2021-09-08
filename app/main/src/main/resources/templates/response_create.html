@@ -1,0 +1,64 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <div>
+        <button th:onclick="'createResponse(' + ${response.resource_id} + ')'" th:text="#{button.save}">save</button>
+    </div>
+
+    <form action="#" th:action="@{/admin}" id="add_response" th:object="${response}" method="post">
+        <div class="ttl">
+            <span th:text="#{response.create.title}"></span>
+        </div>
+
+        <div>
+            <label th:text="#{response.name.label}" for="name"></label>
+            <input th:field="*{name}" type="text" id="name" name="name" />
+        </div>
+
+        <div>
+            <label th:text="#{response.code.label}" for="code"></label>
+            <input th:field="*{code}" type="number" id="code" name="code" />
+        </div>
+
+        <div>
+            <span th:text="#{response.headers.label}"></span>
+            <div>
+                <span class="spn_btn" onclick="addHdr()">+</span>
+                <span class="spn_btn" onclick="addHdrWith('Content-Type','application/json; charset=utf-8')">CT</span>
+                <table>
+                    <tbody id="hdr_tbl">
+                    <tr>
+                        <td>
+                            <input th:field="*{headers}" type="text" name="headers" id="headers" />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <label th:text="#{response.content.label}" for="content"></label>
+            <div class="hint">
+                <div>You can use expressions: ${#params#key} from params in dispatch script</div>
+                <div>${#context#equals(stringKey)#key}, where stringKey - some key of context, key - in params of context</div>
+                <div>${#context#contains(phrase)#key}, phrase - find context by phrase contained in key</div>
+                <div>${#context#equals(params.key)#key}, params.key - value from params in dispatch script</div>
+            </div>
+            <div>
+                <textarea th:field="*{content}" id="content" name="content"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <label th:text="#{response.script.label}" for="script"></label>
+            <div class="hint">
+                <div>You can use objects: response, params, utils</div>
+                <div>response has methods of interface HttpServletResponse</div>
+            </div>
+            <div>
+                <textarea th:field="*{script}" id="script" name="script"></textarea>
+            </div>
+        </div>
+    </form>
+</div>

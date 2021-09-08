@@ -1,0 +1,39 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <h2 th:text="#{logs.label}"></h2>
+    <div class="lg_fltr">
+        <form action="#" th:action="@{/admin}" id="get_logs" method="get">
+            <div>
+                <h3>Filter</h3>
+                <div th:each="res : ${resources}">
+                    <label th:text="${res.path}" th:for="${res.id}"></label>
+                    <input th:id="${res.id}" type="radio" name="resource_id" th:value="${res.id}" />
+                </div>
+            </div>
+            <div>
+                <h3>Size</h3>
+                <select name="size">
+                    <option value="10">10</option>
+                    <option value="10">20</option>
+                    <option value="10">50</option>
+                    <option value="10">100</option>
+                </select>
+            </div>
+        </form>
+        <button class="lg_fltr_b" onclick="applyFilter()">apply</button>
+    </div>
+    <div>
+        <div th:each="log : ${logs}">
+            <div class="lg_itm">
+                <div class="lg_ts" th:text="${log.timestamp}"></div>
+                <div th:text="${log.resource}"></div>
+                <div>
+                    <span th:text="${log.request.method}"></span>
+                    <span th:text="${log.request.path}"></span>
+                </div>
+                <div class="lg_hdrs" th:text="${log.request.headers}"></div>
+                <div class="lg_cntnt" th:text="${log.request.content}"></div>
+            </div>
+        </div>
+    </div>
+</div>
