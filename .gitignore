@@ -1,9 +1,12 @@
 target/
 build/
+build
 out/
 backup/
 import
 .gradle
+publish
+static
 
 *.war
 *.ear
