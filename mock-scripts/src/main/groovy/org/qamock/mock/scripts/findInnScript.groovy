@@ -20,6 +20,7 @@ params.put("request", x)
 // <DocumentSeries>1303</DocumentSeries>
 // <DocumentNumber>592940</DocumentNumber>
 
+//---START RESPONSE SCRIPT---//
 def users = [
         user("423050468026", "Пронизывающий", "Платонович", "Коготок", "123", "+79347462332", "sdfg@mail.ru"),
         user("621321480511", "Варварский", "Спинозович", "Столб", "1", "+79345433311", "adfgdf@mail.ru"),
@@ -34,10 +35,12 @@ def pers = utils.xml(req).Body.SendMessageRequest.Message.GetInnByPersonalInfoRe
 
 def user = users.find{ it.last == pers.SecondName.text() && it.first == pers.FirstName.text() }
 
-initUser(user)
-
-// TODO if inn null -> empty response
-params.put("inn", user.inn)
+if (user == null) {
+    params.put("Message", response(null))
+} else {
+    initUser(user)
+    params.put("Message", response(user.inn))
+}
 
 def user(inn, last, first, mid, doc, phone, mail) {
     return [inn: inn, last: last, first: first, mid: mid, doc: doc, phone: phone, mail: mail]
@@ -51,4 +54,12 @@ def initUser(user) {
             .put("info", user)
 }
 
-println(context.get("423050468026").params)
+def response(inn) {
+    return """<GetInnByPersonalInfoResponseV3 xmlns="urn://x-artefacts-gnivc-ru/ais3/SMZ/SmzPartnersIntegrationService/types/1.0" xsi:schemaLocation="urn://x-artefacts-gnivc-ru/ais3/SMZ/SmzPartnersIntegrationService/types/1.0 schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <InnList>
+    ${inn == null ? "" : "<Inn>$inn</Inn>"}
+  </InnList>
+</GetInnByPersonalInfoResponseV3>"""
+}
+//---END RESPONSE SCRIPT---//
+println(FnsMock.getFnsResponse(params.Message))

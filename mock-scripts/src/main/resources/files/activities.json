@@ -1,0 +1,898 @@
+[
+  {
+    "id": 87,
+    "name": "Авто",
+    "type": "parent"
+  },
+  {
+    "id": 165,
+    "name": "Автомобили",
+    "type": "parent"
+  },
+  {
+    "id": 89,
+    "name": "Автомойка",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 88,
+    "name": "Автосервис",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 92,
+    "name": "Автоэвакуация и буксировка",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 125,
+    "name": "Аниматор",
+    "parentId": 121,
+    "type": "child"
+  },
+  {
+    "id": 95,
+    "name": "Аренда",
+    "type": "parent"
+  },
+  {
+    "id": 97,
+    "name": "Аренда квартир",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 96,
+    "name": "Аренда машин",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 124,
+    "name": "Артист, Музыкант, Певец",
+    "parentId": 121,
+    "type": "child"
+  },
+  {
+    "id": 145,
+    "name": "Благоустройство территории",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 138,
+    "name": "Бухгалтер",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 139,
+    "name": "Бухгалтерия",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 3,
+    "name": "Бытовой ремонт",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 15,
+    "name": "Бытовые услуги",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 39,
+    "name": "Вакцинация животных",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 18,
+    "name": "Ведение хозяйства",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 123,
+    "name": "Ведущий, шоумен, тамада",
+    "parentId": 121,
+    "type": "child"
+  },
+  {
+    "id": 93,
+    "name": "Водитель",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 122,
+    "name": "Гид, экскурсовод",
+    "parentId": 121,
+    "type": "child"
+  },
+  {
+    "id": 153,
+    "name": "Грузчик",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 38,
+    "name": "Груминг",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 23,
+    "name": "Гувернантка",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 78,
+    "name": "Диетолог",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 11,
+    "name": "Дизайн",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 13,
+    "name": "Дом",
+    "type": "parent"
+  },
+  {
+    "id": 17,
+    "name": "Доставка",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 36,
+    "name": "Дрессировщик",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 147,
+    "name": "Животноводство",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 34,
+    "name": "Животные",
+    "type": "parent"
+  },
+  {
+    "id": 74,
+    "name": "Здоровье",
+    "type": "parent"
+  },
+  {
+    "id": 117,
+    "name": "Издательские услуги",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 57,
+    "name": "Информационные услуги",
+    "type": "parent"
+  },
+  {
+    "id": 59,
+    "name": "Исследования",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 162,
+    "name": "капоэйра",
+    "parentId": 160,
+    "type": "child"
+  },
+  {
+    "id": 40,
+    "name": "Кинология",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 105,
+    "name": "Кондитер",
+    "parentId": 103,
+    "type": "child"
+  },
+  {
+    "id": 65,
+    "name": "Консультирование",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 128,
+    "name": "Консультирование",
+    "parentId": 127,
+    "type": "child"
+  },
+  {
+    "id": 134,
+    "name": "Консультирование",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 83,
+    "name": "Консультирование",
+    "parentId": 82,
+    "type": "child"
+  },
+  {
+    "id": 75,
+    "name": "Консультирование",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 157,
+    "name": "Копирайтер",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 67,
+    "name": "Косметолог",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 64,
+    "name": "Красота",
+    "type": "parent"
+  },
+  {
+    "id": 29,
+    "name": "Кузнец",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 148,
+    "name": "Лес, охота, рыбалка",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 79,
+    "name": "Логопед",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 68,
+    "name": "Маникюр, педикюр",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 58,
+    "name": "Маркетинг, реклама",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 77,
+    "name": "Массажист",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 85,
+    "name": "Массажист",
+    "parentId": 82,
+    "type": "child"
+  },
+  {
+    "id": 30,
+    "name": "Металообработка",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 72,
+    "name": "Модель",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 110,
+    "name": "Модельер, дизайнер",
+    "parentId": 108,
+    "type": "child"
+  },
+  {
+    "id": 130,
+    "name": "Налоговый консультант",
+    "parentId": 127,
+    "type": "child"
+  },
+  {
+    "id": 155,
+    "name": "Носильщик",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 22,
+    "name": "Няня",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 154,
+    "name": "Обеспечение безопасности",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 62,
+    "name": "Обрядовые услуги",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 106,
+    "name": "Обслуживание",
+    "parentId": 103,
+    "type": "child"
+  },
+  {
+    "id": 52,
+    "name": "Обучение",
+    "type": "parent"
+  },
+  {
+    "id": 103,
+    "name": "Общественное питание",
+    "type": "parent"
+  },
+  {
+    "id": 108,
+    "name": "Одежда",
+    "type": "parent"
+  },
+  {
+    "id": 115,
+    "name": "Оператор",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 60,
+    "name": "Опросы сбор мнений",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 8,
+    "name": "Отделка",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 118,
+    "name": "Оцифровка",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 66,
+    "name": "Парикмахер",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 61,
+    "name": "Переводчик",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 91,
+    "name": "Перевозка грузов",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 90,
+    "name": "Перевозка пассажиров",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 37,
+    "name": "Передержка животных",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 149,
+    "name": "Переработка отходов",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 158,
+    "name": "Писатель",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 156,
+    "name": "Платные туалеты",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 104,
+    "name": "Повар",
+    "parentId": 103,
+    "type": "child"
+  },
+  {
+    "id": 14,
+    "name": "Повар",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 116,
+    "name": "Полиграфия",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 136,
+    "name": "Посреднические услуги",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 111,
+    "name": "Пошив",
+    "parentId": 108,
+    "type": "child"
+  },
+  {
+    "id": 101,
+    "name": "Предоставление лицензий",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 150,
+    "name": "Прием или сдача лома",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 144,
+    "name": "Природа",
+    "type": "parent"
+  },
+  {
+    "id": 142,
+    "name": "Продукция собственного производства",
+    "parentId": 141,
+    "type": "child"
+  },
+  {
+    "id": 32,
+    "name": "Проектирование",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 27,
+    "name": "Производственные услуги",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 100,
+    "name": "Прокат",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 120,
+    "name": "Прочее",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 112,
+    "name": "Прочее",
+    "parentId": 108,
+    "type": "child"
+  },
+  {
+    "id": 107,
+    "name": "Прочее",
+    "parentId": 103,
+    "type": "child"
+  },
+  {
+    "id": 102,
+    "name": "Прочее",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 94,
+    "name": "Прочее",
+    "parentId": 87,
+    "type": "child"
+  },
+  {
+    "id": 81,
+    "name": "Прочее",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 73,
+    "name": "Прочее",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 63,
+    "name": "Прочее",
+    "parentId": 57,
+    "type": "child"
+  },
+  {
+    "id": 56,
+    "name": "Прочее",
+    "parentId": 52,
+    "type": "child"
+  },
+  {
+    "id": 41,
+    "name": "Прочее",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 33,
+    "name": "Прочее",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 86,
+    "name": "Прочее",
+    "parentId": 82,
+    "type": "child"
+  },
+  {
+    "id": 161,
+    "name": "Прочее",
+    "parentId": 160,
+    "type": "child"
+  },
+  {
+    "id": 159,
+    "name": "Прочее",
+    "parentId": 152,
+    "type": "child"
+  },
+  {
+    "id": 151,
+    "name": "Прочее",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 143,
+    "name": "Прочее",
+    "parentId": 141,
+    "type": "child"
+  },
+  {
+    "id": 140,
+    "name": "Прочее",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 131,
+    "name": "Прочее",
+    "parentId": 127,
+    "type": "child"
+  },
+  {
+    "id": 126,
+    "name": "Прочее",
+    "parentId": 121,
+    "type": "child"
+  },
+  {
+    "id": 25,
+    "name": "Прочее",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 12,
+    "name": "Прочее",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 152,
+    "name": "Прочее",
+    "type": "parent"
+  },
+  {
+    "id": 80,
+    "name": "Психолог",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 121,
+    "name": "Развлечения",
+    "type": "parent"
+  },
+  {
+    "id": 1,
+    "name": "Ремонт",
+    "type": "parent"
+  },
+  {
+    "id": 4,
+    "name": "Ремонт бытовой техники",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 2,
+    "name": "Ремонт квартир",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 53,
+    "name": "Репетитор",
+    "parentId": 52,
+    "type": "child"
+  },
+  {
+    "id": 10,
+    "name": "Реставрация",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 137,
+    "name": "Риелтор",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 5,
+    "name": "Сантехник",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 26,
+    "name": "Сделай Сам",
+    "type": "parent"
+  },
+  {
+    "id": 146,
+    "name": "Сельхоз услуги",
+    "parentId": 144,
+    "type": "child"
+  },
+  {
+    "id": 21,
+    "name": "Сиделка",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 19,
+    "name": "Социальная помощь",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 82,
+    "name": "Спорт",
+    "type": "parent"
+  },
+  {
+    "id": 70,
+    "name": "Стилист",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 28,
+    "name": "Столяр, плотник",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 24,
+    "name": "Сторож",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 135,
+    "name": "Страховые услуги",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 7,
+    "name": "Строительство",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 160,
+    "name": "танцы",
+    "type": "parent"
+  },
+  {
+    "id": 69,
+    "name": "Тату и пирсинг",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 9,
+    "name": "Техобслуживание",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 109,
+    "name": "Ткани, Кройка и шитье",
+    "parentId": 108,
+    "type": "child"
+  },
+  {
+    "id": 141,
+    "name": "Торговля самостоятельно произведенным товаром",
+    "type": "parent"
+  },
+  {
+    "id": 54,
+    "name": "Тренер",
+    "parentId": 52,
+    "type": "child"
+  },
+  {
+    "id": 84,
+    "name": "Тренер, инструктор",
+    "parentId": 82,
+    "type": "child"
+  },
+  {
+    "id": 76,
+    "name": "Тренер, инструктор",
+    "parentId": 74,
+    "type": "child"
+  },
+  {
+    "id": 16,
+    "name": "Уборка и клининг",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 99,
+    "name": "Услуги по временному проживанию",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 31,
+    "name": "Услуги по сборке",
+    "parentId": 26,
+    "type": "child"
+  },
+  {
+    "id": 98,
+    "name": "Услуги по хранению",
+    "parentId": 95,
+    "type": "child"
+  },
+  {
+    "id": 35,
+    "name": "Уход за животными",
+    "parentId": 34,
+    "type": "child"
+  },
+  {
+    "id": 55,
+    "name": "Учитель",
+    "parentId": 52,
+    "type": "child"
+  },
+  {
+    "id": 133,
+    "name": "Финансовые услуги",
+    "parentId": 132,
+    "type": "child"
+  },
+  {
+    "id": 132,
+    "name": "Финансы",
+    "type": "parent"
+  },
+  {
+    "id": 113,
+    "name": "Фото - Видео - Печать",
+    "type": "parent"
+  },
+  {
+    "id": 114,
+    "name": "Фотограф",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 20,
+    "name": "Химчистка",
+    "parentId": 13,
+    "type": "child"
+  },
+  {
+    "id": 119,
+    "name": "Художник",
+    "parentId": 113,
+    "type": "child"
+  },
+  {
+    "id": 6,
+    "name": "Электрик",
+    "parentId": 1,
+    "type": "child"
+  },
+  {
+    "id": 71,
+    "name": "Эпиляция",
+    "parentId": 64,
+    "type": "child"
+  },
+  {
+    "id": 129,
+    "name": "Юридические услуги",
+    "parentId": 127,
+    "type": "child"
+  },
+  {
+    "id": 127,
+    "name": "Юристы",
+    "type": "parent"
+  }
+]

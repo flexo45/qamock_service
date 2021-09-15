@@ -1,0 +1,21 @@
+<suite>
+    <properties>
+        <property key="qrcId" value=""/>
+        <property key="qState" value=""/>
+        <property key="absOperationId" value=""/>
+        <property key="url" value="" />
+    </properties>
+    <steps>
+        <step id="0" type="http">
+            <method>post</method>
+            <path>${url}</path>
+            <headers>
+                <header>
+                    <key>Content-Type</key>
+                    <val>application/json;charset=utf-8</val>
+                </header>
+            </headers>
+            <content>{"anId":"B2h38dhdwefsdfsjfnsdj","qrcId":"${qrcId}","clientPhone":"+79***1122","clientFio":"Пет***","operationId":"A0032342343423432","absOperationId":"${absOperationId}","qState":"${qState}"}</content>
+        </step>
+    </steps>
+</suite>

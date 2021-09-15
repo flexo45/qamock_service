@@ -1,0 +1,23 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+group 'org.qamock.tools.scripts'
+description 'sbp-inn-tester'
+version '0.1.2'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.6'
+    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+}
+
+task uberjar(type: Jar, dependsOn:compileGroovy) {
+    from files(sourceSets.main.java.outputDir, sourceSets.main.groovy.outputDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    manifest {
+        attributes 'Main-Class': 'ru.vtb.inn.Checker'
+    }
+}
