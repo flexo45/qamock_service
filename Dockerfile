@@ -1,4 +1,5 @@
-FROM openjdk:11-jdk
+  ARG DOCKER_REGISTRY=public-docker-proxy-registry-redhat-io.nexus-ci.corp.dev.vtb
+FROM ${DOCKER_REGISTRY}/ubi8/docker:latest
 
 USER root
 
@@ -8,12 +9,12 @@ RUN mkdir -p /opt/qamock/static
 
 WORKDIR /opt/qamock
 
-ADD app/main/build/libs/main-1.0-SNAPSHOT.jar ./qamock-service-1.0-SNAPSHOT.jar
+ADD main-1.0-SNAPSHOT.jar ./qamock-service-1.0-SNAPSHOT.jar
 #copy Static
-ADD app/main/build/resources/main/static ./static
+ADD app/main/src/main/resources/static ./static
 #copy DB
 ADD mockservice ./mockservice
 #copy Resources
-ADD resources ./resources
+ADD app/main/src/main/resources ./resources
 
 CMD [ "java", "-jar", "qamock-service-1.0-SNAPSHOT.jar"]
