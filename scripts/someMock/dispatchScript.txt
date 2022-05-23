@@ -1,0 +1,10 @@
+Тут какой то текст или описание скрипта
+
+//---START SCRIPT---//
+def clientId = request.jobject().get("id")
+params.put("message", clientId)
+if (clientId == "123") { return "scriptedResponse" }
+else { return "okResponse" }
+//---END SCRIPT---//
+
+Тут может быть еще какое-то пояснение, в итоге попадет только текст между метками

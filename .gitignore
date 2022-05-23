@@ -6,7 +6,6 @@ backup/
 import
 .gradle
 publish
-static
 
 *.war
 *.ear

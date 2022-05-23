@@ -1,0 +1,25 @@
+{
+  "name": "Some Mock",
+  "path": "service/api/v1",
+  "methods": [ "POST", "GET" ],
+  "logging": true,
+  "dispatch": "script",
+  "dispatchScript": "dispatchScript.txt",
+  "defaultResponse": "okResponse",
+  "responses": [
+    {
+      "name": "scriptedResponse",
+      "code": 200,
+      "headers": [ "Content-Type: application/json; charset=utf-8" ],
+      "body": "{\"message\": \"${#params#message}\"}",
+      "prescript": "responseScript.groovy"
+    },
+    {
+      "name": "okResponse",
+      "code": 200,
+      "headers": [ "Content-Type: application/json; charset=utf-8" ],
+      "body": "{\"result\": \"OK\"}",
+      "prescript": null
+    }
+  ]
+}
