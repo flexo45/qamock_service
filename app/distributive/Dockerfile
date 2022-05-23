@@ -16,4 +16,7 @@ ADD ../../mockservice ./mockservice
 #copy Resources
 ADD ../../resources ./resources
 
+#create resources scripts loading folder
+RUN mkdir -p /opt/qamock/scripts
+
 CMD [ "java", "-jar", "qamock-service-1.0-SNAPSHOT.jar"]
