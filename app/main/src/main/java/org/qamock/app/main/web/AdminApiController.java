@@ -1,5 +1,6 @@
 package org.qamock.app.main.web;
 
+import org.qamock.app.main.dynamic.loader.DynamicResourceFileLoader;
 import org.qamock.app.main.service.AccountService;
 import org.qamock.app.main.service.DynamicResourcesService;
 import org.qamock.app.main.service.ScriptService;
@@ -27,6 +28,9 @@ public class AdminApiController {
 
     @Autowired
     ScriptService scriptService;
+
+    @Autowired
+    DynamicResourceFileLoader resourceFileLoader;
 
     @PostMapping(value = "/admin/scripts/add")
     @ResponseBody
@@ -114,6 +118,16 @@ public class AdminApiController {
     public ApiResult addUser(@ModelAttribute UserObject userObject){
         ApiResult result = new ApiResult();
         accountService.addAccount(userObject);
+        result.setStatusCode(0);
+        result.setStatusText("OK");
+        return result;
+    }
+
+    @GetMapping(value = "/admin/dynamic/load")
+    @ResponseBody
+    public ApiResult loadResourceScripts() {
+        ApiResult result = new ApiResult();
+        resourceFileLoader.loadScriptsManual();
         result.setStatusCode(0);
         result.setStatusText("OK");
         return result;

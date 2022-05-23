@@ -63,6 +63,20 @@ function openResource(resource_id){
     });
 }
 
+function loadResourcesScripts() {
+    $.ajax({
+        type: "GET",
+        url: "/admin/dynamic/load",
+        success: function(data){
+            alert("Create successful");
+            loadResourcesView();
+        },
+        error: function(data){
+            alert("ERROR " + data.responseText);
+        }
+    });
+}
+
 function openCreateResource(){
     $.ajax({
             dataType: "xml",
