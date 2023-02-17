@@ -31,7 +31,7 @@ public class DynamicResourceController {
     public void dispatchPayload(HttpServletRequest request,
                                 HttpServletResponse response,
                                 @RequestHeader(value = "Content-Type", defaultValue = "text/plain") String type,
-                                @RequestBody String content) throws DynamicResourceException {
+                                @RequestBody(required = false) String content) throws DynamicResourceException {
 
         logger.info("Receive payload request: url=" + request.getRequestURI() + ", content-type=" + type + ", payload=" + content);
 
