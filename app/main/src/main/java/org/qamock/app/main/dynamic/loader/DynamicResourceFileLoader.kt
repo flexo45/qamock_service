@@ -86,7 +86,7 @@ class DynamicResourceFileLoader(private val resourceService: DynamicResourcesSer
         json.responses.forEach { mockResponse ->
             resourceService.createResponse(ResponseObject().apply {
                 name = mockResponse.name
-                content = mockResponse.body
+                content = mockResponse.body ?: ""
                 code = mockResponse.code
                 resource_id = resource.id
                 headers = mockResponse.headers
@@ -116,5 +116,5 @@ data class ResourceScriptSettings(val name: String,
 data class ResourceScriptResponseSettings(val name: String,
                                           val code: Int,
                                           val headers: List<String>,
-                                          val body: String,
+                                          val body: String?,
                                           val prescript: String?)
